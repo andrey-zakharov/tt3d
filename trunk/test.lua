@@ -1,0 +1,2 @@
+
+print ( PrintNumber( 100 ) )

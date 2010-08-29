@@ -1,0 +1,8 @@
+Map is huge. Player can zoomout to scheme view, which should be simple enough to be calculated for very large areas.
+Size of zoomed in area can be determinated by player's system power (via game settings) and include well made simulating mode.
+
+tracks should be planned, price can be calculated (dynamic) based on construction companies activities in this region.
+Anyways, each track cell (or 100m of it) can have several owners (shares). Such can be done at planning stage (another player
+do the same plan, and players shares the building costs and after do not pay each other passing fee
+
+industries initially 

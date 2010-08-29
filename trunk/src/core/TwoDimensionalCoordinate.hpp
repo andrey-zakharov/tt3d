@@ -209,7 +209,6 @@ namespace core {
         _a.m_y = _a.m_y - _b.m_y;
         return _a;
     }
-    //#############################################################################
 
     template< class numeric_t >
     inline
@@ -263,7 +262,6 @@ namespace core {
         _a.m_y = _a.m_y * _b.m_y;
         return _a;
     }
-    //#############################################################################
 
     template< class numeric_t >
     inline
@@ -317,7 +315,6 @@ namespace core {
         _a.m_y = _a.m_y / _b.m_y;
         return _a;
     }
-    //#############################################################################
 
     template< class numeric_t >
     inline
@@ -411,15 +408,12 @@ namespace core {
 
     template< class numeric_t >
     inline
-    numeric_t
-    operator<(
-    TwoDimensionalCoordinate< numeric_t > const & _left
-    , TwoDimensionalCoordinate< numeric_t > const & _right
-    ) {
-        if ( _left.m_x < _right.m_x )
-            return true;
-        else if ( _left.m_x > _right.m_x )
-            return false;
+    numeric_t operator<(
+        TwoDimensionalCoordinate< numeric_t > const & _left,
+        TwoDimensionalCoordinate< numeric_t > const & _right ) {
+        
+        if ( _left.m_x < _right.m_x )       return true;
+        else if ( _left.m_x > _right.m_x )  return false;
         return _left.m_y < _right.m_y;
     }
     
@@ -438,13 +432,28 @@ namespace core {
 #include <boost/test/unit_test.hpp>
 #define BOOST_TEST_MODULE testTwoDimensionalCoordinate
 
-BOOST_AUTO_TEST_CASE(testCommonPart)
-{
+// <editor-fold defaultstate="collapsed" desc="as black box">
+BOOST_AUTO_TEST_CASE( testCommonPart ) {
     core::TwoDimensionalCoordinate< int > a( 3, 2 );
     core::TwoDimensionalCoordinate< int > b( 2, 3 );
 
     BOOST_CHECK_EQUAL( core::common_part( a, b ).m_x, 2 );
+    BOOST_CHECK_EQUAL( core::common_part( a, b ).m_y, 2 );
+
+    a.m_x = 5;    a.m_y = 0;
+    b.m_x = 0;    b.m_y = 5;
+
+    BOOST_CHECK_EQUAL( core::common_part( a, b ).m_x, 0 );
+    BOOST_CHECK_EQUAL( core::common_part( a, b ).m_y, 0 );
+
 }
+
+BOOST_AUTO_TEST_CASE( testDIstance ) {
+        core::TwoDimensionalCoordinate< int > a( 3, 4 ); ///< distance = 5
+        BOOST_CHECK_EQUAL( a.distance( core::TwoDimensionalCoordinate< int > (0, 0) ), 5 );
+}
+// </editor-fold>
+
 
 #endif
 #endif

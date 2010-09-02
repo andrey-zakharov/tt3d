@@ -77,6 +77,8 @@ if ( CMAKE_BUILD_TYPE STREQUAL "Debug" )
   add_definitions ( -D_DEBUG )
 endif ( CMAKE_BUILD_TYPE STREQUAL "Debug" )
 
+
+# Tests
 message( STATUS "Configured in ${CMAKE_BUILD_TYPE}" )
 set ( TESTS_SOURCES src/test/TestMain.cpp )
 set ( TEST test_${CMAKE_PROJECT_NAME} )

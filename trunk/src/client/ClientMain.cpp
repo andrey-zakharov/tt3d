@@ -6,7 +6,7 @@
  */
 
 #include <cstdlib>
-#include "TwoDimensionalCoordinate.hpp"
+#include "Coordinate.hpp"
 using namespace std;
 
 /**

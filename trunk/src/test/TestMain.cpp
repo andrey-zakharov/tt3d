@@ -12,7 +12,7 @@
 
 
 #include <boost/test/unit_test.hpp>
-#include "TwoDimensionalCoordinate.hpp"
+#include "Coordinate.hpp"
 
 using namespace std;
 

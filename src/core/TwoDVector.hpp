@@ -7,7 +7,7 @@
 namespace core {
 
     template < class numeric_t >
-    struct TwoDimensionalCoordinate {
+    struct TwoDVector {
     public:
         numeric_t m_x;
         numeric_t m_y;
@@ -16,20 +16,20 @@ namespace core {
          * Default constructor initializes to 0, 0
          * This can be removed, because of c++ defaults
          */
-        TwoDimensionalCoordinate( ) :
+        TwoDVector( ) :
             m_x( 0 ),
             m_y( 0 ) { }
 
-        TwoDimensionalCoordinate( numeric_t aX, numeric_t aY ) :
+        TwoDVector( numeric_t aX, numeric_t aY ) :
             m_x( aX ),
             m_y( aY ) { }
 
-        void add( TwoDimensionalCoordinate const & _b ) {
+        void add( TwoDVector const & _b ) {
             m_x += _b.m_x;
             m_y += _b.m_y;
         }
 
-        void sub( TwoDimensionalCoordinate const & _b ) {
+        void sub( TwoDVector const & _b ) {
             m_x -= _b.m_x;
             m_y -= _b.m_y;
         }
@@ -44,7 +44,7 @@ namespace core {
          * @param second point
          * @return distance
          */
-        double distance( const TwoDimensionalCoordinate & _b ) const {
+        double distance( const TwoDVector & _b ) const {
             double ret = 0.0 +
                 pow( double( std::abs( m_x - _b.m_x ) ), 2.0 ) +
                 pow( double( std::abs( m_y - _b.m_y ) ), 2.0 ) ;
@@ -59,11 +59,11 @@ namespace core {
 
     template< class numeric_t >
     inline
-    TwoDimensionalCoordinate< numeric_t > operator%(
-    TwoDimensionalCoordinate< numeric_t > const & _a,
+    TwoDVector< numeric_t > operator%(
+    TwoDVector< numeric_t > const & _a,
     numeric_t _b
     ) {
-        TwoDimensionalCoordinate< numeric_t > ret( _a );
+        TwoDVector< numeric_t > ret( _a );
         ret.m_x = _a.m_x % _b;
         ret.m_y = _a.m_y % _b;
         return ret;
@@ -72,11 +72,11 @@ namespace core {
 
     template< class numeric_t >
     inline
-    TwoDimensionalCoordinate< numeric_t > operator%(
-        TwoDimensionalCoordinate< numeric_t > const & _a,
-        TwoDimensionalCoordinate< numeric_t > const & _b
+    TwoDVector< numeric_t > operator%(
+        TwoDVector< numeric_t > const & _a,
+        TwoDVector< numeric_t > const & _b
     ) {
-        TwoDimensionalCoordinate< numeric_t > ret;
+        TwoDVector< numeric_t > ret;
         ret.m_x = _a.m_x % _b.m_x;
         ret.m_y = _a.m_y % _b.m_y;
         return ret;
@@ -84,8 +84,8 @@ namespace core {
 
     template< class numeric_t >
     inline
-    TwoDimensionalCoordinate< numeric_t > operator%=(
-        TwoDimensionalCoordinate< numeric_t > & _a,
+    TwoDVector< numeric_t > operator%=(
+        TwoDVector< numeric_t > & _a,
         numeric_t _b
     ) {
         _a.m_x = _a.m_x % _b;
@@ -95,9 +95,9 @@ namespace core {
 
     template< class numeric_t >
     inline
-    TwoDimensionalCoordinate< numeric_t > operator%=(
-        TwoDimensionalCoordinate< numeric_t > & _a,
-        TwoDimensionalCoordinate< numeric_t > const & _b
+    TwoDVector< numeric_t > operator%=(
+        TwoDVector< numeric_t > & _a,
+        TwoDVector< numeric_t > const & _b
     ) {
         _a.m_x = _a.m_x % _b.m_x;
         _a.m_y = _a.m_y % _b.m_y;
@@ -106,12 +106,12 @@ namespace core {
 
     template< class numeric_t >
     inline
-    TwoDimensionalCoordinate< numeric_t >
+    TwoDVector< numeric_t >
     operator+(
-    TwoDimensionalCoordinate< numeric_t > const & _a
+    TwoDVector< numeric_t > const & _a
     , numeric_t _b
     ) {
-        TwoDimensionalCoordinate< numeric_t > ret( _a );
+        TwoDVector< numeric_t > ret( _a );
         ret.m_x = _a.m_x + _b;
         ret.m_y = _a.m_y + _b;
         return ret;
@@ -120,12 +120,12 @@ namespace core {
 
     template< class numeric_t >
     inline
-    TwoDimensionalCoordinate< numeric_t >
+    TwoDVector< numeric_t >
     operator+(
-    TwoDimensionalCoordinate< numeric_t > const & _a
-    , TwoDimensionalCoordinate< numeric_t > const & _b
+    TwoDVector< numeric_t > const & _a
+    , TwoDVector< numeric_t > const & _b
     ) {
-        TwoDimensionalCoordinate< numeric_t > ret;
+        TwoDVector< numeric_t > ret;
         ret.m_x = _a.m_x + _b.m_x;
         ret.m_y = _a.m_y + _b.m_y;
         return ret;
@@ -134,9 +134,9 @@ namespace core {
 
     template< class numeric_t >
     inline
-    TwoDimensionalCoordinate< numeric_t >
+    TwoDVector< numeric_t >
     operator+=(
-    TwoDimensionalCoordinate< numeric_t > & _a
+    TwoDVector< numeric_t > & _a
     , numeric_t _b
     ) {
         _a.m_x = _a.m_x + _b;
@@ -147,10 +147,10 @@ namespace core {
 
     template< class numeric_t >
     inline
-    TwoDimensionalCoordinate< numeric_t >
+    TwoDVector< numeric_t >
     operator+=(
-    TwoDimensionalCoordinate< numeric_t > & _a
-    , TwoDimensionalCoordinate< numeric_t > const & _b
+    TwoDVector< numeric_t > & _a
+    , TwoDVector< numeric_t > const & _b
     ) {
         _a.m_x = _a.m_x + _b.m_x;
         _a.m_y = _a.m_y + _b.m_y;
@@ -159,12 +159,12 @@ namespace core {
 
     template< class numeric_t >
     inline
-    TwoDimensionalCoordinate< numeric_t >
+    TwoDVector< numeric_t >
     operator-(
-    TwoDimensionalCoordinate< numeric_t > const & _a
+    TwoDVector< numeric_t > const & _a
     , numeric_t _b
     ) {
-        TwoDimensionalCoordinate< numeric_t > ret( _a );
+        TwoDVector< numeric_t > ret( _a );
         ret.m_x = _a.m_x - _b;
         ret.m_y = _a.m_y - _b;
         return ret;
@@ -173,12 +173,12 @@ namespace core {
 
     template< class numeric_t >
     inline
-    TwoDimensionalCoordinate< numeric_t >
+    TwoDVector< numeric_t >
     operator-(
-    TwoDimensionalCoordinate< numeric_t > const & _a
-    , TwoDimensionalCoordinate< numeric_t > const & _b
+    TwoDVector< numeric_t > const & _a
+    , TwoDVector< numeric_t > const & _b
     ) {
-        TwoDimensionalCoordinate< numeric_t > ret;
+        TwoDVector< numeric_t > ret;
         ret.m_x = _a.m_x - _b.m_x;
         ret.m_y = _a.m_y - _b.m_y;
         return ret;
@@ -187,9 +187,9 @@ namespace core {
 
     template< class numeric_t >
     inline
-    TwoDimensionalCoordinate< numeric_t >
+    TwoDVector< numeric_t >
     operator-=(
-    TwoDimensionalCoordinate< numeric_t > & _a
+    TwoDVector< numeric_t > & _a
     , numeric_t _b
     ) {
         _a.m_x = _a.m_x - _b;
@@ -200,10 +200,10 @@ namespace core {
 
     template< class numeric_t >
     inline
-    TwoDimensionalCoordinate< numeric_t >
+    TwoDVector< numeric_t >
     operator-=(
-    TwoDimensionalCoordinate< numeric_t > & _a
-    , TwoDimensionalCoordinate< numeric_t > const & _b
+    TwoDVector< numeric_t > & _a
+    , TwoDVector< numeric_t > const & _b
     ) {
         _a.m_x = _a.m_x - _b.m_x;
         _a.m_y = _a.m_y - _b.m_y;
@@ -212,12 +212,12 @@ namespace core {
 
     template< class numeric_t >
     inline
-    TwoDimensionalCoordinate< numeric_t >
+    TwoDVector< numeric_t >
     operator*(
-    TwoDimensionalCoordinate< numeric_t > const & _a
+    TwoDVector< numeric_t > const & _a
     , numeric_t _b
     ) {
-        TwoDimensionalCoordinate< numeric_t > ret( _a );
+        TwoDVector< numeric_t > ret( _a );
         ret.m_x = _a.m_x * _b;
         ret.m_y = _a.m_y * _b;
         return ret;
@@ -226,12 +226,12 @@ namespace core {
 
     template< class numeric_t >
     inline
-    TwoDimensionalCoordinate< numeric_t >
+    TwoDVector< numeric_t >
     operator*(
-    TwoDimensionalCoordinate< numeric_t > const & _a
-    , TwoDimensionalCoordinate< numeric_t > const & _b
+    TwoDVector< numeric_t > const & _a
+    , TwoDVector< numeric_t > const & _b
     ) {
-        TwoDimensionalCoordinate< numeric_t > ret;
+        TwoDVector< numeric_t > ret;
         ret.m_x = _a.m_x * _b.m_x;
         ret.m_y = _a.m_y * _b.m_y;
         return ret;
@@ -240,9 +240,9 @@ namespace core {
 
     template< class numeric_t >
     inline
-    TwoDimensionalCoordinate< numeric_t >
+    TwoDVector< numeric_t >
     operator*=(
-    TwoDimensionalCoordinate< numeric_t > & _a
+    TwoDVector< numeric_t > & _a
     , numeric_t _b
     ) {
         _a.m_x = _a.m_x * _b;
@@ -253,10 +253,10 @@ namespace core {
 
     template< class numeric_t >
     inline
-    TwoDimensionalCoordinate< numeric_t >
+    TwoDVector< numeric_t >
     operator*=(
-    TwoDimensionalCoordinate< numeric_t > & _a
-    , TwoDimensionalCoordinate< numeric_t > const & _b
+    TwoDVector< numeric_t > & _a
+    , TwoDVector< numeric_t > const & _b
     ) {
         _a.m_x = _a.m_x * _b.m_x;
         _a.m_y = _a.m_y * _b.m_y;
@@ -265,12 +265,12 @@ namespace core {
 
     template< class numeric_t >
     inline
-    TwoDimensionalCoordinate< numeric_t >
+    TwoDVector< numeric_t >
     operator/(
-    TwoDimensionalCoordinate< numeric_t > const & _a
+    TwoDVector< numeric_t > const & _a
     , numeric_t _b
     ) {
-        TwoDimensionalCoordinate< numeric_t > ret( _a );
+        TwoDVector< numeric_t > ret( _a );
         ret.m_x = _a.m_x / _b;
         ret.m_y = _a.m_y / _b;
         return ret;
@@ -279,12 +279,12 @@ namespace core {
 
     template< class numeric_t >
     inline
-    TwoDimensionalCoordinate< numeric_t >
+    TwoDVector< numeric_t >
     operator/(
-    TwoDimensionalCoordinate< numeric_t > const & _a
-    , TwoDimensionalCoordinate< numeric_t > const & _b
+    TwoDVector< numeric_t > const & _a
+    , TwoDVector< numeric_t > const & _b
     ) {
-        TwoDimensionalCoordinate< numeric_t > ret;
+        TwoDVector< numeric_t > ret;
         ret.m_x = _a.m_x / _b.m_x;
         ret.m_y = _a.m_y / _b.m_y;
         return ret;
@@ -293,9 +293,9 @@ namespace core {
 
     template< class numeric_t >
     inline
-    TwoDimensionalCoordinate< numeric_t >
+    TwoDVector< numeric_t >
     operator/=(
-    TwoDimensionalCoordinate< numeric_t > & _a
+    TwoDVector< numeric_t > & _a
     , numeric_t _b
     ) {
         _a.m_x = _a.m_x / _b;
@@ -306,10 +306,10 @@ namespace core {
 
     template< class numeric_t >
     inline
-    TwoDimensionalCoordinate< numeric_t >
+    TwoDVector< numeric_t >
     operator/=(
-    TwoDimensionalCoordinate< numeric_t > & _a
-    , TwoDimensionalCoordinate< numeric_t > const & _b
+    TwoDVector< numeric_t > & _a
+    , TwoDVector< numeric_t > const & _b
     ) {
         _a.m_x = _a.m_x / _b.m_x;
         _a.m_y = _a.m_y / _b.m_y;
@@ -318,8 +318,8 @@ namespace core {
 
     template< class numeric_t >
     inline
-    TwoDimensionalCoordinate< numeric_t > switch_values( TwoDimensionalCoordinate< numeric_t > const & _a ) {
-        TwoDimensionalCoordinate< numeric_t > ret;
+    TwoDVector< numeric_t > switch_values( TwoDVector< numeric_t > const & _a ) {
+        TwoDVector< numeric_t > ret;
         ret.m_x = _a.m_y;
         ret.m_y = _a.m_x;
         return ret;
@@ -328,8 +328,8 @@ namespace core {
 
     template< class numeric_t >
     inline
-    TwoDimensionalCoordinate< numeric_t >
-    switch_values( TwoDimensionalCoordinate< numeric_t > & _a ) {
+    TwoDVector< numeric_t >
+    switch_values( TwoDVector< numeric_t > & _a ) {
         std::swap< numeric_t > ( _a.m_x, _a.m_y );
     }
 
@@ -338,8 +338,8 @@ namespace core {
     inline
     bool
     operator==(
-    TwoDimensionalCoordinate< numeric_t > const & _a
-    , TwoDimensionalCoordinate< numeric_t > const & _b
+    TwoDVector< numeric_t > const & _a
+    , TwoDVector< numeric_t > const & _b
     ) {
         return _a.m_x == _b.m_x && _a.m_y == _b.m_y;
     }
@@ -348,20 +348,20 @@ namespace core {
     inline
     bool
     operator!=(
-    TwoDimensionalCoordinate< numeric_t > const & _a
-    , TwoDimensionalCoordinate< numeric_t > const & _b
+    TwoDVector< numeric_t > const & _a
+    , TwoDVector< numeric_t > const & _b
     ) {
         return _a.m_x != _b.m_x || _a.m_y != _b.m_y;
     }
 
     template< class numeric_t >
     inline
-    TwoDimensionalCoordinate< numeric_t > common_part(
-        TwoDimensionalCoordinate< numeric_t > const & _a,
-        TwoDimensionalCoordinate< numeric_t > const & _b
+    TwoDVector< numeric_t > common_part(
+        TwoDVector< numeric_t > const & _a,
+        TwoDVector< numeric_t > const & _b
     ) {
-        TwoDimensionalCoordinate< numeric_t > first;
-        TwoDimensionalCoordinate< numeric_t > second;
+        TwoDVector< numeric_t > first;
+        TwoDVector< numeric_t > second;
 
         if ( _a.m_x < _b.m_x ) {
             first = _a;
@@ -371,7 +371,7 @@ namespace core {
             second = _a;
         }
 
-        TwoDimensionalCoordinate< numeric_t > ret( 0, 0 );
+        TwoDVector< numeric_t > ret( 0, 0 );
 
         if ( first.m_y < second.m_x ) return ret;
 
@@ -385,9 +385,9 @@ namespace core {
 
     template< class numeric_t >
     inline
-    TwoDimensionalCoordinate< numeric_t > floor(
-        TwoDimensionalCoordinate< numeric_t > _source ) {
-        TwoDimensionalCoordinate< numeric_t > return_value;
+    TwoDVector< numeric_t > floor(
+        TwoDVector< numeric_t > _source ) {
+        TwoDVector< numeric_t > return_value;
 
         return_value.m_x = std::floor( _source.m_x );
         return_value.m_y = std::floor( _source.m_y );
@@ -409,8 +409,8 @@ namespace core {
     template< class numeric_t >
     inline
     numeric_t operator<(
-        TwoDimensionalCoordinate< numeric_t > const & _left,
-        TwoDimensionalCoordinate< numeric_t > const & _right ) {
+        TwoDVector< numeric_t > const & _left,
+        TwoDVector< numeric_t > const & _right ) {
         
         if ( _left.m_x < _right.m_x )       return true;
         else if ( _left.m_x > _right.m_x )  return false;
@@ -420,10 +420,10 @@ namespace core {
 
     template< typename numeric_1_t, typename numeric_2_t >
     inline
-    TwoDimensionalCoordinate< numeric_2_t > convert(
-        TwoDimensionalCoordinate< numeric_1_t > const & src ) {
+    TwoDVector< numeric_2_t > convert(
+        TwoDVector< numeric_1_t > const & src ) {
         
-        return TwoDimensionalCoordinate< numeric_2_t > ( numeric_2_t( src.m_x ), numeric_2_t( src.m_y ) );
+        return TwoDVector< numeric_2_t > ( numeric_2_t( src.m_x ), numeric_2_t( src.m_y ) );
     }
     // </editor-fold>
 };
@@ -434,8 +434,8 @@ namespace core {
 
 // <editor-fold defaultstate="collapsed" desc="as black box">
 BOOST_AUTO_TEST_CASE( testCommonPart ) {
-    core::TwoDimensionalCoordinate< int > a( 3, 2 );
-    core::TwoDimensionalCoordinate< int > b( 2, 3 );
+    core::TwoDVector< int > a( 3, 2 );
+    core::TwoDVector< int > b( 2, 3 );
 
     BOOST_CHECK_EQUAL( core::common_part( a, b ).m_x, 2 );
     BOOST_CHECK_EQUAL( core::common_part( a, b ).m_y, 2 );
@@ -449,8 +449,8 @@ BOOST_AUTO_TEST_CASE( testCommonPart ) {
 }
 
 BOOST_AUTO_TEST_CASE( testDIstance ) {
-        core::TwoDimensionalCoordinate< int > a( 3, 4 ); ///< distance = 5
-        BOOST_CHECK_EQUAL( a.distance( core::TwoDimensionalCoordinate< int > (0, 0) ), 5 );
+        core::TwoDVector< int > a( 3, 4 ); ///< distance = 5
+        BOOST_CHECK_EQUAL( a.distance( core::TwoDVector< int > (0, 0) ), 5 );
 }
 // </editor-fold>
 

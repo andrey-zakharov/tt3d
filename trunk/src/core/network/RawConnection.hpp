@@ -2,11 +2,11 @@
  * File:   RawConnection.hpp
  * Author: vaulter
  *
- * Created on 6 —ÂÌÚˇ·¸ 2010 „., 3:09
+ * Created on 6 –°–µ–Ω—Ç—è–±—Ä—å 2010 –≥., 3:09
  */
 
 #ifndef RAWCONNECTION_HPP
-#define	RAWCONNECTION_HPP
+#define RAWCONNECTION_HPP
 
 // http://code.google.com/p/server1/
 //
@@ -40,57 +40,57 @@ public:
     }
 
     bool
-    reading( ) const {
+    IsReading( ) const {
         return status_ & READING;
     }
 
     bool
-    writting( ) const {
+    IsWriting( ) const {
         return status_ & WRITTING;
     }
 
     void
-    set_reading( ) {
+    SetReading( ) {
         atomic_or( &status_, READING );
     }
 
     void
-    set_writting( ) {
+    SetWriting( ) {
         atomic_or( &status_, WRITTING );
     }
 
     void
-    clear_reading( ) {
+    ClearReading( ) {
         atomic_and( &status_, ~READING );
     }
 
     void
-    clear_writting( ) {
+    ClearWriting( ) {
         atomic_and( &status_, ~WRITTING );
     }
 
     void
-    set_closing( ) {
+    SetClosing( ) {
         atomic_or( &status_, CLOSING );
     }
 
     bool
-    closing( ) const {
+    IsClosing( ) const {
         return status_ & CLOSING;
     }
 
     bool
-    idle( ) const {
+    IsIdle( ) const {
         return status_ == IDLE;
     }
 
     int
-    status( ) const {
+    Status( ) const {
         return status_;
     }
 
     boost::shared_mutex &
-    mutex( ) {
+    Mutex( ) {
         return mutex_;
     }
 private:
@@ -114,10 +114,12 @@ class RawConnection : public boost::noncopyable {
 private:
     typedef RawConnectionStatus::Locker Locker;
 public:
-    typedef boost::intrusive_ptr<RawConnectionStatus> StatusPtr;
-    RawConnection( const string &name,
-            boost::shared_ptr<Connection> connection );
+    typedef boost::intrusive_ptr< RawConnectionStatus > StatusPtr;
+    
+    RawConnection( const string &name, boost::shared_ptr< Connection > connection );
+
     void Disconnect( StatusPtr status, bool async );
+
     bool ScheduleWrite( StatusPtr status );
     // The push will take the ownership of the data
 
@@ -131,7 +133,7 @@ public:
     void InitSocket( StatusPtr status, TcpSocket *socket );
 
     const string
-    name( ) const {
+    Name( ) const {
         return name_;
     }
     virtual ~RawConnection( );
@@ -139,7 +141,7 @@ protected:
     static const char kHeartBeat = 0xb;
     static const int kDefaultTimeoutMs = 30000;
     static const int kRecvDelayFactor = 2;
-    template <class T> void InternalPushData( const T &data );
+    template < class T > void InternalPushData( const T &data );
 
     SharedConstBuffers *
     incoming( ) {
@@ -157,6 +159,7 @@ protected:
         // Switch the working vector.
         incoming_index_ = 1 - incoming_index_;
     }
+    
     inline void OOBRecv( StatusPtr status, const boost::system::error_code &e, size_t n );
     inline void OOBSend( StatusPtr status, const boost::system::error_code &e );
     inline void HandleRead( StatusPtr status, const boost::system::error_code& e, size_t bytes_transferred );
@@ -174,10 +177,10 @@ protected:
     typedef boost::array< char, kBufferSize > BufferType;
     BufferType mBuffer;
 
-    int incoming_index_;
-    SharedConstBuffers duplex_[2];
-    boost::mutex incoming_mutex_;
-    boost::shared_ptr<Connection> connection_;
+    int                             incoming_index_;
+    SharedConstBuffers              duplex_[ 2 ];
+    boost::mutex                    incoming_mutex_;
+    boost::shared_ptr< Connection > connection_;
 
     int send_package_;
     int recv_package_;
@@ -185,40 +188,39 @@ protected:
 };
 // Represents a protocol implementation.
 
-template <typename Decoder>
+template < typename Decoder >
 class RawConnectionImpl : public RawConnection {
 public:
 
-    RawConnectionImpl( const string &name,
-            boost::shared_ptr< Connection > connection )
-    : RawConnection( name, connection ) { }
+    RawConnectionImpl( const string &name, boost::shared_ptr< Connection > connection ) :
+        RawConnection( name, connection ) { }
 protected:
     inline bool Decode( size_t bytes_transferred );
     virtual bool Handle( const Decoder *decoder ) = 0;
     Decoder decoder_;
 };
 
-template <typename Decoder>
-bool RawConnectionImpl<Decoder>
-::Decode( size_t bytes_transferred ) {
+template < typename Decoder >
+bool RawConnectionImpl< Decoder >::Decode( size_t bytes_transferred ) {
     boost::tribool result;
     const char *start = mBuffer.data( );
     const char *end = start + bytes_transferred;
     const char *p = start;
+    
     while ( p < end ) {
         boost::tie( result, p ) =
                 decoder_.Decode( p, end );
         if ( result ) {
-            VLOG( 2 ) << name( ) << " : " << "Handle lineformat: size: " << ( p - start );
+            VLOG( 2 ) << Name( ) << " : " << "Handle lineformat: size: " << ( p - start );
             if ( !Handle( &decoder_ ) ) {
                 return false;
             }
             decoder_.reset( );
         } else if ( !result ) {
-            VLOG( 2 ) << name( ) << " : " << "Parse error";
+            VLOG( 2 ) << Name( ) << " : " << "Parse error";
             return false;
         } else {
-            VLOG( 2 ) << name( ) << " : " << "Need to read more data";
+            VLOG( 2 ) << Name( ) << " : " << "Need to read more data";
             return true;
         }
     }
@@ -226,5 +228,5 @@ bool RawConnectionImpl<Decoder>
 }
 
 
-#endif	/* RAWCONNECTION_HPP */
+#endif  /* RAWCONNECTION_HPP */
 

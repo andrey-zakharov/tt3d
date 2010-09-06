@@ -7,6 +7,8 @@
 
 #include <cstdlib>
 #include "Coordinate.hpp"
+#include "NetworkClient.hpp"
+
 using namespace std;
 
 /**
@@ -14,6 +16,7 @@ using namespace std;
  */
 int
 main( int argc, char** argv ) {
-   
+
+
     return 0;
 }

@@ -5,4 +5,17 @@ tracks should be planned, price can be calculated (dynamic) based on constructio
 Anyways, each track cell (or 100m of it) can have several owners (shares). Such can be done at planning stage (another player
 do the same plan, and players shares the building costs and after do not pay each other passing fee
 
-industries initially 
+industries types initially loaded from def files. After creation of world, last one contains an economy object,
+which contains industries, cities, .... Initials routes should be established between industries to init them. <-
+
+
+Trains has power, and TE (Tractive Effort) and aero resist. There are two situations where works on maximum -
+    start moment and moving(climbing).
+Sometimes they can be at the same time. While starting, train needs to overcome friction of train weight.
+While moving - aero resist (proportional speed), when climbing - wagons weight (kinetic energy become potential energy)
+Each body have a impulse = m * v (m-mass, v-velocity), which resist to changes. So, each train should be accelerated
+and slow down with this point.
+
+
+Track and roads should be builded in a free form. User clicks start, moves mouse, and clicks at the end.
+Plan of build been created. User can adjust while in planning state

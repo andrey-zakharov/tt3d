@@ -15,17 +15,6 @@ include ( projects/cmake/macros.cmake )
 
 set ( TARGET_SERVER "tt3d-server" )
 set ( TARGET_CLIENT "tt3d-client" )
-# -------------------------------------------------------------
-# Sources
-# -------------------------------------------------------------
-file (GLOB_RECURSE SERVER_SRC   RELATIVE ${CMAKE_SOURCE_DIR} src/server/*.cpp src/server/*.c src/server/*.hpp src/server/*.h )
-file (GLOB_RECURSE CLIENT_SRC   RELATIVE ${CMAKE_SOURCE_DIR} src/client/*.cpp src/client/*.c src/client/*.hpp src/client/*.h )
-add_executable( ${TARGET_SERVER} ${SERVER_SRC} )
-add_executable( ${TARGET_CLIENT} ${CLIENT_SRC} )
-
-add_subdirectory( ${3RDPARTY} )
-add_dependencies( ${TARGET_SERVER} depends )
-
 
 
 #-------------------------------------------------------------
@@ -34,7 +23,21 @@ add_dependencies( ${TARGET_SERVER} depends )
 set ( Boost_USE_STATIC_LIBS OFF )
 set ( Boost_USE_MULTITHREAD ON )
 find_package        ( Lua51 REQUIRED )
-find_package        ( Boost COMPONENTS unit_test_framework )
+find_package        ( Boost COMPONENTS unit_test_framework system thread )
+find_package        ( ProtocolBuffers REQUIRED )
+#glog
+
+# -------------------------------------------------------------
+# Sources
+# -------------------------------------------------------------
+
+#Prepare ProtoBuf 
+WRAP_PROTO( PROTO_SRCS proto/meta.proto )
+message( STATUS ${PROTO_SRCS} )
+
+file (GLOB_RECURSE SERVER_SRC   RELATIVE ${CMAKE_SOURCE_DIR} src/server/*.cpp src/server/*.c src/server/*.hpp src/server/*.h )
+file (GLOB_RECURSE CLIENT_SRC   RELATIVE ${CMAKE_SOURCE_DIR} src/client/*.cpp src/client/*.c src/client/*.hpp src/client/*.h )
+
 
 
 #set ( CMAKE_BUILD_TYPE Release )
@@ -46,25 +49,41 @@ set ( CMAKE_BUILD_TYPE "Debug" )
 # Source directories.
 # -------------------------------------------------------------
 set ( INCLUDE_DIRS
+  3rdparty/include
   src/core
   ${CMAKE_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/src
   ${CMAKE_SOURCE_DIR}/inc
+  ${CMAKE_SOURCE_DIR}/src/core/network
+
+  # for proto/meta.pb.h
+  ${CMAKE_CURRENT_BINARY_DIR}
+
   ${LUA_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
+  ${PROTOBUF_INCLUDE_DIR}
+)
+
+#used by both
+set ( COMMON_LIBS
+  glog
+  ${Boost_LIBRARIES}
+  ${LUA_LIBRARIES}
+  ${PROTOBUF_LIBRARY}
 )
 
 set ( SERVER_LIBS
-  ${LUA_LIBRARIES}
+
 )
 set ( CLIENT_LIBS
-  ${Boost_LIBRARIES}
-  ${LUA_LIBRARIES}
+
+)
+
+link_directories (
+   ${CMAKE_SOURCE_DIR}/3rdparty/lib
 )
 
 include_directories ( ${INCLUDE_DIRS} )
-target_link_libraries ( ${TARGET_SERVER} ${SERVER_LIBS} )
-target_link_libraries ( ${TARGET_CLIENT} ${CLIENT_LIBS} )
 
 # Preprocessor
 if ( Boost_FOUND )
@@ -77,13 +96,35 @@ if ( CMAKE_BUILD_TYPE STREQUAL "Debug" )
   add_definitions ( -D_DEBUG )
 endif ( CMAKE_BUILD_TYPE STREQUAL "Debug" )
 
+# -------------------------------------------------------------
+# Targets
+# -------------------------------------------------------------
+add_executable( ${TARGET_SERVER} ${SERVER_SRC} ${PROTO_SRCS} )
+add_executable( ${TARGET_CLIENT} ${PROTO_SRCS} ${CLIENT_SRC} )
 
+add_subdirectory( ${3RDPARTY} )
+add_dependencies( ${TARGET_SERVER} depends )
+add_dependencies( ${TARGET_CLIENT} ${PROTO_SRCS} )
+
+target_link_libraries ( ${TARGET_SERVER} ${COMMON_LIBS} ${SERVER_LIBS} )
+target_link_libraries ( ${TARGET_CLIENT} ${COMMON_LIBS} ${CLIENT_LIBS} )
+
+
+
+# -------------------------------------------------------------
 # Tests
+# -------------------------------------------------------------
 message( STATUS "Configured in ${CMAKE_BUILD_TYPE}" )
-set ( TESTS_SOURCES src/test/TestMain.cpp )
+set ( TESTS_SOURCES 
+  src/test/TestMain.cpp
+  src/core/thread/ThreadPool.hpp
+  src/core/IOServicePool.cpp
+  src/server/ServerListener.cpp 
+  src/client/NetworkClient.cpp 
+  src/core/network/Connection.cpp )
 set ( TEST test_${CMAKE_PROJECT_NAME} )
-add_executable ( ${TEST} ${TESTS_SOURCES} )
-target_link_libraries ( ${TEST} ${PROJECT} ${Boost_LIBRARIES} )
+add_executable ( ${TEST} ${TESTS_SOURCES}  ${PROTO_SRCS} )
+target_link_libraries ( ${TEST} ${PROJECT} ${COMMON_LIBS} ${CLIENT_LIBS} ${SERVER_LIBS} )
 enable_testing ()
 add_test ( ${TEST} ${TEST} )
 

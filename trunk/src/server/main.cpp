@@ -1,7 +1,14 @@
 #include <stdlib.h>
 #include <error.h>
 #include <iostream>
+#include <boost/asio.hpp>
+
 #include "lua.hpp"
+#include "ServerListener.hpp"
+
+typedef boost::asio::io_service IOService;
+
+using server::ServerListener;
 
 static int
 LS_PrintNumber( lua_State *L ) {
@@ -22,9 +29,25 @@ LS_PrintNumber( lua_State *L ) {
 }
 
 void testLua();
-int main ( int argc, char *argv[] ) {
-  std::cout << "Hello! " << std::endl;
-  testLua();
+
+int
+main( int argc, char *argv[] ) {
+    std::cout << "Hello! " << std::endl;
+    testLua( );
+
+    try {
+
+        IOService io;
+        ServerListener server( io );
+        //server.Config();
+        server.Start();
+
+        io.run( );
+
+    } catch ( std::exception& e ) {
+        std::cerr << e.what( ) << std::endl;
+    }
+
 }
 
 
@@ -48,7 +71,8 @@ void testLua() {
 
     if ( status ) {
         error( 0, status, "cannot run lua file: %s", lua_tostring(L, -1) );
-        exit( 1 );
+        //exit( 1 );
+        return;
     }
 
     if ( status == 0 ) {    // execute Lua program

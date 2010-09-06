@@ -27,6 +27,7 @@
 
 using std::string;
 using std::vector;
+using boost::shared_ptr;
 
 class RpcController : virtual public google::protobuf::RpcController {
 public:
@@ -120,28 +121,28 @@ public:
 
     virtual void
     Disconnect( ) {
-        if ( mStatus->closing( ) ) {
+        if ( mStatus->IsClosing( ) ) {
             VLOG( 2 ) << "Disconnect " << Name( ) << " but is closing";
             return;
         }
         VLOG( 2 ) << "Disconnect " << Name( );
-        mStatus->mutex( ).lock_shared( );
+        mStatus->Mutex( ).lock_shared( );
         if ( impl_ ) {
             impl_->Disconnect( mStatus, false );
             return;
         }
-        mStatus->mutex( ).unlock_shared( );
+        mStatus->Mutex( ).unlock_shared( );
         VLOG( 2 ) << "Disconnected " << Name( );
     }
 
     virtual bool
     IsConnected( ) const {
-        return !mStatus->idle( ) && !mStatus->closing( );
+        return !mStatus->IsIdle( ) && !mStatus->IsClosing( );
     }
 
     const string
     Name( ) const {
-        return impl_.get( ) ? impl_->name( ) : mName;
+        return impl_.get( ) ? impl_->Name( ) : mName;
     }
 
     virtual
@@ -162,16 +163,16 @@ public:
     virtual void
     Expired( ) {
         VLOG( 2 ) << Name( ) << " Expired";
-        mStatus->mutex( ).lock_shared( );
+        mStatus->Mutex( ).lock_shared( );
 
-        if ( mStatus->closing( ) ) {
+        if ( mStatus->IsClosing( ) ) {
             VLOG( 2 ) << "Heartbeat " << Name( ) << " but is closing";
-            mStatus->mutex( ).unlock_shared( );
+            mStatus->Mutex( ).unlock_shared( );
             return;
         }
 
         if ( impl_.get( ) == NULL ) {
-            mStatus->mutex( ).unlock_shared( );
+            mStatus->Mutex( ).unlock_shared( );
             return;
         }
         
@@ -180,8 +181,8 @@ public:
 
     inline bool
     ScheduleWrite( ) {
-        RawConnectionStatus::Locker locker( mStatus->mutex( ) );
-        if ( mStatus->closing( ) ) {
+        RawConnectionStatus::Locker locker( mStatus->Mutex( ) );
+        if ( mStatus->IsClosing( ) ) {
             VLOG( 2 ) << "ScheduleWrite " << Name( ) << " but is closing";
             return false;
         }
@@ -192,8 +193,8 @@ public:
     // The push will take the ownership of the data
     inline bool
     PushData( const T &data ) {
-        RawConnectionStatus::Locker locker( mStatus->mutex( ) );
-        if ( mStatus->closing( ) ) {
+        RawConnectionStatus::Locker locker( mStatus->Mutex( ) );
+        if ( mStatus->IsClosing( ) ) {
             VLOG( 2 ) << "PushData " << Name( ) << " but is closing";
             return false;
         }
@@ -225,10 +226,12 @@ protected:
     
     boost::intrusive_ptr< RawConnectionStatus > mStatus;
     string                                      mName;
-    boost::scoped_ptr<RawConnection>            impl_;
+    boost::scoped_ptr< RawConnection >          impl_;
     int                                         mId;
     vector< boost::weak_ptr< IAsyncCloseListener > > mListeners;
     boost::mutex                                mListenerMutex;
     friend class RawConnection;
 };
+
+typedef shared_ptr< Connection >        ConnectionPtr;
 #endif // NET2_CONNECTION_HPP_

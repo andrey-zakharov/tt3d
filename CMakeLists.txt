@@ -121,7 +121,9 @@ set ( TESTS_SOURCES
   src/core/IOServicePool.cpp
   src/server/ServerListener.cpp 
   src/client/NetworkClient.cpp 
-  src/core/network/Connection.cpp )
+  src/core/network/Connection.cpp
+  src/core/network/RawConnection.cpp 
+)
 set ( TEST test_${CMAKE_PROJECT_NAME} )
 add_executable ( ${TEST} ${TESTS_SOURCES}  ${PROTO_SRCS} )
 target_link_libraries ( ${TEST} ${PROJECT} ${COMMON_LIBS} ${CLIENT_LIBS} ${SERVER_LIBS} )

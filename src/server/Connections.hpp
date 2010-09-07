@@ -2,7 +2,7 @@
  * File:   Connections.hpp
  * Author: vaulter
  *
- * Created on 4 Сентябрь 2010 г., 12:09
+ * Created on 4 РЎРµРЅС‚СЏР±СЂСЊ 2010 Рі., 12:09
  */
 
 #ifndef CONNECTIONS_HPP

@@ -2,7 +2,7 @@
  * File:   UserClient.hpp
  * Author: vaulter
  *
- * Created on 4 Сентябрь 2010 г., 1:11
+ * Created on 4 РЎРµРЅС‚СЏР±СЂСЊ 2010 Рі., 1:11
  */
 
 #ifndef USERCLIENT_HPP

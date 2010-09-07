@@ -86,7 +86,7 @@ public:
                 mStart = i + 1;
                 return;
             } else {
-                mBuffer[i] = mBuffer[i] + size;
+                mBuffer[ i ] = mBuffer[ i ] + size;
                 mStart = i;
                 return;
             }

@@ -2,7 +2,7 @@
  * File:   ClientConnection.hpp
  * Author: vaulter
  *
- * Created on 5 Сентябрь 2010 г., 17:32
+ * Created on 5 РЎРµРЅС‚СЏР±СЂСЊ 2010 Рі., 17:32
  */
 
 #ifndef CLIENTCONNECTION_HPP

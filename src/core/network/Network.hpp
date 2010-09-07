@@ -2,7 +2,7 @@
  * File:   Network.hpp
  * Author: vaulter
  *
- * Created on 4 Сентябрь 2010 г., 0:14
+ * Created on 4 РЎРµРЅС‚СЏР±СЂСЊ 2010 Рі., 0:14
  */
 
 #ifndef NETWORK_HPP

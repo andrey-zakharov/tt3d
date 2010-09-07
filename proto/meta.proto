@@ -1,4 +1,4 @@
-
+package ProtobufLineFormat;
 message MetaData {
   enum Type {
     REQUEST = 1;

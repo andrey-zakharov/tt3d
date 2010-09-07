@@ -29,7 +29,7 @@ namespace client {
         // Operations
     public:
         NetworkClient( IOService& io, TcpResolver::iterator endpoint_iterator );
-        void Close( );
+        void Close();
 
         /// Request to write
         /// @param message		(???)
@@ -37,13 +37,13 @@ namespace client {
 
 
     private:
-        void OnRead( );
+        void OnRead();
         void OnConnect( const boost::system::error_code& error, TcpResolver::iterator endpoint_iterator );
-        void OnReadHeader( );
-        void OnReadBody( );
+        void OnReadHeader();
+        void OnReadBody();
         void DoWrite() ;// intermediant for io service post callback
         /// Async wrting to asio socket
-        void OnWrite( );
+        void OnWrite();
     protected:
         static const int    kBufferSize = 8192;
 

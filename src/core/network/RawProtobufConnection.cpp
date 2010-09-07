@@ -7,37 +7,41 @@
 
 // Author: xiliu.tang@gmail.com (Xiliu Tang)
 
-#include "server/connection.hpp"
-#include "server/raw_connection.hpp"
-#include "server/protobuf_connection.hpp"
-#include "server/raw_protobuf_connection.hpp"
-#define RawConnTrace VLOG(2) << name() << ".protobuf : " << __func__ << " "
 
-RawProtobufConnection::~RawProtobufConnection( ) {
-    VLOG( 2 ) << Name( ) << " : " << "Distroy protobuf connection";
-    ReleaseResponseTable( );
+#include "Containers.hpp"
+#include "Connection.hpp"
+#include "RawConnection.hpp"
+#include "ProtobufConnection.hpp"
+#include "RawProtobufConnection.hpp"
+#include "Closure.hpp"
+
+
+#define RawConnTrace VLOG(2) << Name() << ".protobuf : " << __func__ << " "
+
+RawProtobufConnection::~RawProtobufConnection() {
+    VLOG( 2 ) << Name() << " : " << "Distroy protobuf connection";
+    ReleaseResponseTable();
 }
 
 void
-RawProtobufConnection::ReleaseResponseTable( ) {
+RawProtobufConnection::ReleaseResponseTable() {
     vector<HandlerFunctor> handlers;
     {
         boost::mutex::scoped_lock locker( mResponseHandlerTableMutex );
 
-        for ( HandlerTable::iterator it = mResponseHandlerTable.begin( );
-                it != mResponseHandlerTable.end( ); ++it ) {
+        for ( HandlerTable::iterator it = mResponseHandlerTable.begin(); it != mResponseHandlerTable.end(); ++it ) {
             handlers.push_back( it->second );
         }
 
-        mResponseHandlerTable.clear( );
+        mResponseHandlerTable.clear();
     }
 
-    for ( int i = 0; i < handlers.size( ); ++i ) {
-        LOG( WARNING ) << Name( ) << " : " << "Call response handler in ReleaseResponseTable NO " << i;
+    for ( int i = 0; i < handlers.size(); ++i ) {
+        LOG( WARNING ) << Name() << " : " << "Call response handler in ReleaseResponseTable NO " << i;
         handlers[i]( NULL, connection_ );
     }
 
-    handlers.clear( );
+    handlers.clear();
 }
 
 template <>
@@ -48,8 +52,8 @@ void RawConnection::InternalPushData< EncodeData >(const EncodeData &data ) {
         return;
     }
 
-    incoming( )->push( data.first );
-    incoming( )->push( data.second );
+    incoming()->push( data.first );
+    incoming()->push( data.second );
 }
 
 boost::tribool
@@ -63,7 +67,7 @@ ProtobufDecoder::Consume( char input ) {
                 return false;
             }
             mState = Length;
-            length_store_.clear( );
+            length_store_.clear();
             length_store_.push_back( input );
             return boost::indeterminate;
         }
@@ -72,7 +76,7 @@ ProtobufDecoder::Consume( char input ) {
                 mState = Content;
                 length_ = boost::lexical_cast<int>( length_store_ );
                 content_.reserve( length_ );
-                VLOG( 2 ) << "Length: " << length_store_ << " length size: " << length_store_.size( ) << " Content size: " << length_;
+                VLOG( 2 ) << "Length: " << length_store_ << " length size: " << length_store_.size() << " Content size: " << length_;
                 return boost::indeterminate;
 
             } else if ( !isdigit( input ) ) {
@@ -85,13 +89,13 @@ ProtobufDecoder::Consume( char input ) {
             }
         case Content:
 
-            if ( content_.full( ) ) {
+            if ( content_.full() ) {
                 return false;
             }
 
             content_.push_back( input );
 
-            if ( content_.full( ) ) {
+            if ( content_.full() ) {
 
                 if ( !meta_.ParseFromArray( content_.content(), content_.capacity() ) ) {
                     LOG( WARNING ) << "Parse content error";
@@ -99,12 +103,12 @@ ProtobufDecoder::Consume( char input ) {
                 }
 
                 if ( meta_.type() == ProtobufLineFormat::MetaData::REQUEST &&
-                        !meta_.has_response_identify( ) ) {
+                        !meta_.has_response_identify() ) {
                     LOG( WARNING ) << "request meta data should have response identify field";
                     return false;
                 }
 
-                if ( meta_.content( ).empty( ) ) {
+                if ( meta_.content().empty() ) {
                     LOG( WARNING ) << "Meta without content: ";
                     return false;
                 }
@@ -123,7 +127,7 @@ ProtobufDecoder::Consume( char input ) {
 bool
 RawProtobufConnection::Handle( const ProtobufDecoder *decoder ) {
     CHECK( decoder != NULL );
-    bool ret = service_connection_->Handle( connection_, decoder );
+    bool ret = mServiceConnection->Handle( connection_, decoder );
 
     if ( ret ) {
         RawConnTrace << "Client->Servive ";
@@ -134,16 +138,16 @@ RawProtobufConnection::Handle( const ProtobufDecoder *decoder ) {
     HandlerTable::value_type::second_type handler;
     {
         boost::mutex::scoped_lock locker( mResponseHandlerTableMutex );
-        HandlerTable::iterator it = mResponseHandlerTable.find( meta.identify( ) );
+        HandlerTable::iterator it = mResponseHandlerTable.find( meta.identify() );
 
-        if ( it == mResponseHandlerTable.end( ) ) {
-            VLOG( 2 ) << Name( ) << " : " << "Unknown request";
+        if ( it == mResponseHandlerTable.end() ) {
+            VLOG( 2 ) << Name() << " : " << "Unknown request";
             return false;
         }
 
         handler = it->second;
         mResponseHandlerTable.erase( it );
-        RawConnTrace << "Remove: " << meta.identify( ) << " table size: " << mResponseHandlerTable.size( );
+        RawConnTrace << "Remove: " << meta.identify() << " table size: " << mResponseHandlerTable.size();
     }
 
     handler( decoder, connection_ );
@@ -155,7 +159,7 @@ RawProtobufConnection::RawProtobufConnection(
         ConnectionPtr   connection,
         ProtobufConnection *service_connection ) :
             RawConnectionImpl< ProtobufDecoder >( name, connection ),
-            service_connection_( service_connection )
+            mServiceConnection( service_connection )
 { }
 
 static void
@@ -173,19 +177,19 @@ CallMethodCallback(
 
         if ( rpc_controller ) {
             rpc_controller->SetFailed( "Abort" );
-            rpc_controller->Notify( );
+            rpc_controller->Notify();
         }
         return;
     }
 
-    const ProtobufLineFormat::MetaData &meta = decoder->meta( );
+    const ProtobufLineFormat::MetaData &meta = decoder->meta();
 
-    VLOG( 2 ) << connection->Name( ) << " : " << "Handle response message "
-            << response->GetDescriptor( )->full_name( )
-            << " identify: " << meta.identify( );
+    VLOG( 2 ) << connection->Name() << " : " << "Handle response message "
+            << response->GetDescriptor()->full_name()
+            << " identify: " << meta.identify();
 
     if ( !response->ParseFromArray( meta.content().c_str(), meta.content().size() ) ) {
-        LOG( WARNING ) << connection->Name( ) << " : " << "Fail to parse the response :";
+        LOG( WARNING ) << connection->Name() << " : " << "Fail to parse the response :";
         
         if ( rpc_controller ) {
             rpc_controller->SetFailed( "Fail to parse the response:" );
@@ -206,10 +210,10 @@ RawProtobufConnection::CallMethod(
         google::protobuf::Message *response,
         google::protobuf::Closure *done ) {
 
-    VLOG( 2 ) << Name( ) << " : " << "CallMethod";
+    VLOG( 2 ) << Name() << " : " << "CallMethod";
 
-    uint64 request_identify = hash8( method->full_name( ) );
-    uint64 response_identify = hash8( response->GetDescriptor( )->full_name( ) );
+    uint64 request_identify = hash8( method->full_name() );
+    uint64 response_identify = hash8( response->GetDescriptor()->full_name() );
     ProtobufLineFormat::MetaData meta;
     RpcController *rpc_controller = dynamic_cast<RpcController*> ( controller );
     bool error = false;
@@ -219,7 +223,7 @@ RawProtobufConnection::CallMethod(
         boost::mutex::scoped_lock locker( mResponseHandlerTableMutex );
         HandlerTable::const_iterator it = mResponseHandlerTable.find( response_identify );
 
-        while ( it != mResponseHandlerTable.end( ) ) {
+        while ( it != mResponseHandlerTable.end() ) {
             static int seq = 1;
             ++seq;
             response_identify += seq;
@@ -233,19 +237,19 @@ RawProtobufConnection::CallMethod(
                 response_identify,
                 boost::bind( CallMethodCallback, _1, _2, controller, response, done ) ) );
 
-        error = !request->AppendToString( meta.mutable_content( ) );
+        error = !request->AppendToString( meta.mutable_content() );
 
         if ( error ) {
-            LOG( WARNING ) << Name( ) << " : "
+            LOG( WARNING ) << Name() << " : "
                     << "Fail to serialze request form method: "
-                    << method->full_name( );
+                    << method->full_name();
             reason = "AppendTostringError";
             goto failed;
         }
 
-        VLOG( 2 ) << Name( ) << " Insert: "
+        VLOG( 2 ) << Name() << " Insert: "
                 << response_identify << " to response handler table, size: "
-                << mResponseHandlerTable.size( );
+                << mResponseHandlerTable.size();
     }
 
     do {
@@ -253,18 +257,18 @@ RawProtobufConnection::CallMethod(
         error = !PushData( data );
 
         if ( error ) {
-            LOG( WARNING ) << Name( ) << " : " << "PushData error, connection may closed";
+            LOG( WARNING ) << Name() << " : " << "PushData error, connection may closed";
             reason = "PushDataError";
             delete data.first;
             delete data.second;
             break;
         }
 
-        RawConnTrace << " PushData, " << " incoming: " << incoming( )->size( );
+        RawConnTrace << " PushData, " << " incoming: " << incoming()->size();
         error = !ScheduleWrite( status );
         
         if ( error ) {
-            LOG( WARNING ) << Name( ) << " : "
+            LOG( WARNING ) << Name() << " : "
                     << "ScheduleWrite error, connection may closed";
             reason = "ScheduleWriteError";
             delete data.first;

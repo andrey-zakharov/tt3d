@@ -12,19 +12,22 @@
 #include <boost/function.hpp>
 #include <boost/thread/condition.hpp>
 #include <boost/thread/mutex.hpp>
+#include <boost/lexical_cast.hpp>
 #include <protobuf/message.h>
 #include <protobuf/descriptor.h>
 #include <protobuf/service.h>
 
 #include "Common.hpp"
+#include "Containers.hpp"
 #include "network/Connection.hpp"
 #include "proto/meta.pb.h"
 #include "Logger.hpp"
 #include "thread/Notifier.hpp"
+#include "Buffer.hpp"
 // Encoder the Protobuf to line format.
 // The line format is:
 // length:content
-typedef pair< const string *, const string *> EncodeData;
+typedef std::pair< const string *, const string *> EncodeData;
 
 inline EncodeData
 EncodeMessage( const google::protobuf::Message *msg ) {
@@ -36,10 +39,10 @@ EncodeMessage( const google::protobuf::Message *msg ) {
                 static_cast < const string * > ( NULL ) );
     }
 
-    string *header = new string( boost::lexical_cast< string > ( content->size( ) ) );
+    string *header = new string( boost::lexical_cast< string > ( content->size() ) );
     header->push_back( ':' );
     VLOG( 2 ) << "Encode Message, header: " << *header
-            << " content size: " << content->size( );
+            << " content size: " << content->size();
 
     return make_pair( header, content );
 };
@@ -48,7 +51,7 @@ class ProtobufDecoder {
 public:
 
     /// Construct ready to parse the request method.
-    ProtobufDecoder( ) : mState( Start ) { };
+    ProtobufDecoder() : mState( Start ) { };
 
     /// Parse some data. The boost::tribool return value is true when a complete request
     /// has been parsed, false if the data is invalid, indeterminate when more
@@ -72,16 +75,16 @@ public:
     }
 
     const ProtobufLineFormat::MetaData &
-    meta( ) const {
+    meta() const {
         return meta_;
     }
 
     void
-    reset( ) {
+    reset() {
         mState = Start;
-        length_store_.clear( );
+        length_store_.clear();
         length_ = 0;
-        content_.clear( );
+        content_.clear();
     }
 private:
     /// Handle the next character of input.
@@ -99,7 +102,7 @@ private:
 
     string length_store_;
     int length_;
-    Buffer<char> content_;
+    Buffer< char > content_;
     ProtobufLineFormat::MetaData meta_;
 };
 
@@ -112,7 +115,7 @@ public:
             const string        &name,
             ConnectionPtr       connection,
             ProtobufConnection  *service_connection );
-    ~RawProtobufConnection( );
+    ~RawProtobufConnection();
 
     // Thread safe.
     void CallMethod( RawConnection::StatusPtr status,
@@ -122,7 +125,7 @@ public:
             google::protobuf::Message *response,
             google::protobuf::Closure *done );
 private:
-    void ReleaseResponseTable( );
+    void ReleaseResponseTable();
     virtual bool Handle( const ProtobufDecoder *decoder );
     // The response handler table is per connection.
     HandlerTable        mResponseHandlerTable;

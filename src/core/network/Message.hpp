@@ -12,7 +12,7 @@
 
 struct Message {
 private:
-    MetaData            mMeta;
+    ProtobufLineFormat::MetaData            mMeta;
 public:
     std::string &  data() {};
 };

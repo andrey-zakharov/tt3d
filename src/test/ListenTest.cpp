@@ -8,7 +8,7 @@
 // Author: xiliu.tang@gmail.com (Xiliu Tang)
 
 #include "network/ClientConnection.hpp"
-#include "server/server.hpp"
+#include "network/Server.hpp"
 #include <gflags/gflags.h>
 #include <gtest/gtest.h>
 #include "proto/hello.pb.h"

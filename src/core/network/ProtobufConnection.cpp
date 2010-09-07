@@ -7,8 +7,10 @@
 
 // Author: xiliu.tang@gmail.com (Xiliu Tang)
 
+#include "Containers.hpp"
 #include "network/ProtobufConnection.hpp"
 #include "network/RawProtobufConnection.hpp"
+#include "network/Closure.hpp"
 
 static void
 CallServiceMethodDone(
@@ -106,10 +108,10 @@ ProtobufConnection::CallMethod(
         google::protobuf::Message                   *response,
         google::protobuf::Closure                   *done ) {
     
-    RawConnectionStatus::Locker locker( status_->mutex() );
+    RawConnectionStatus::Locker locker( mStatus->Mutex() );
     
-    if ( status_->closing() || impl_.get() == NULL ) {
-        VLOG( 2 ) << "CallMethod " << name() << " but is closing";
+    if ( mStatus->IsClosing() || impl_.get() == NULL ) {
+        VLOG( 2 ) << "CallMethod " << Name() << " but is closing";
         RpcController *rpc_controller = dynamic_cast< RpcController* > ( controller );
 
         if ( rpc_controller ) {
@@ -125,7 +127,7 @@ ProtobufConnection::CallMethod(
     }
     
     RawProtobufConnection *impl = dynamic_cast< RawProtobufConnection* > ( impl_.get() );
-    impl->CallMethod( status_, method, controller, request, response, done );
+    impl->CallMethod( mStatus, method, controller, request, response, done );
 }
 
 bool
@@ -151,7 +153,7 @@ ProtobufConnection::Handle( ConnectionPtr connection, const ProtobufDecoder *dec
 //factory
 ConnectionPtr
 ProtobufConnection::Span( TcpSocket *socket ) {
-    boost::shared_ptr< ProtobufConnection > connection( new ProtobufConnection( name() + ".span" ) );
+    boost::shared_ptr< ProtobufConnection > connection( new ProtobufConnection( Name() + ".span" ) );
 
     if ( !connection->Attach( this, socket ) ) {
         connection.reset();
@@ -163,7 +165,7 @@ ProtobufConnection::Span( TcpSocket *socket ) {
 bool
 ProtobufConnection::Attach( ProtobufConnection *service_connection, TcpSocket *socket ) {
     static int i = 0;
-    const string span_name = this->name() + boost::lexical_cast< string > ( i++ );
+    const string span_name = this->Name() + boost::lexical_cast< string > ( i++ );
 
     RawConnection * raw_connection( new RawProtobufConnection(
             span_name,
@@ -177,6 +179,6 @@ ProtobufConnection::Attach( ProtobufConnection *service_connection, TcpSocket *s
     }
 
     impl_.reset( raw_connection );
-    impl_->InitSocket( status_, socket );
+    impl_->InitSocket( mStatus, socket );
     return true;
 }

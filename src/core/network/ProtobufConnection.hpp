@@ -14,6 +14,7 @@
 #include <boost/thread/mutex.hpp>
 
 #include "Common.hpp"
+#include "Containers.hpp"
 #include "Logger.hpp"
 #include "network/Connection.hpp"
 #include "proto/meta.pb.h"
@@ -22,18 +23,18 @@ class ProtobufDecoder;
 
 class ProtobufConnection : public Connection {
 private:
-    typedef boost::function2<void, const ProtobufDecoder*, ConnectionPtr > HandlerFunctor;
-    typedef hash_map<uint64, HandlerFunctor> HandlerTable;
+    typedef boost::function2< void, const ProtobufDecoder*, ConnectionPtr > HandlerFunctor;
+    typedef hash_map< uint64, HandlerFunctor > HandlerTable;
 public:
 
     explicit
     ProtobufConnection( const string &name ) :
         Connection( name ) {
-            
+
         VLOG( 2 ) << "New protobuf connection: " << name;
     }
 
-    ~ProtobufConnection( ) { }
+    ~ProtobufConnection() { }
 
     virtual ConnectionPtr Span( TcpSocket *socket );
 

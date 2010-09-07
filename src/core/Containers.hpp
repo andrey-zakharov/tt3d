@@ -7,7 +7,7 @@
 
 #ifndef CONTAINERS_HPP
 #define	CONTAINERS_HPP
-
+#include "Hash.hpp"
 /**
  * code include this header for list, vector, ....
  * this file candidate for redefining by
@@ -20,6 +20,20 @@
 
 #define List        std::list
 
+//#include <base/hash.hpp>
+
+#include <ext/hash_map>
+#include <ext/hash_set>
+using __gnu_cxx::hash_map;
+using __gnu_cxx::hash_set;
+
+
+#include <boost/scoped_array.hpp>
+#include <boost/scoped_ptr.hpp>
+using boost::scoped_ptr;
+using boost::scoped_array;
+
+using std::make_pair;
 
 #endif	/* CONTAINERS_HPP */
 

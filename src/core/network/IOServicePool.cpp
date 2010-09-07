@@ -116,8 +116,8 @@ public:
         *cnt = 0xbeef;
     }
 protected:
-    static const int kPoolSize = 40;
-    static const int kThreadSize = 40;
+    static const int kPoolSize = 2;
+    static const int kThreadSize = 4;
 
     //tests
 public:

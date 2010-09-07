@@ -10,7 +10,6 @@
 #define RawConnTrace VLOG(2) << Name() << " : " << __func__ << " status: " << status->Status() << " "
 
 #include <boost/thread.hpp>
-#include <boost/signal.hpp>
 #include <protobuf/service.h>
 
 #include "Common.hpp"

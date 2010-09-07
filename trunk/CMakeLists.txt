@@ -9,21 +9,27 @@ enable_language(CXX)
 
 # -------------------------------------------------------------
 cmake_minimum_required(VERSION 2.6)
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/projects/cmake/modules/")
+list (APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/projects/cmake/modules/" "${CMAKE_ROOT}/Modules")
 include ( init.cmake )
 include ( projects/cmake/macros.cmake )
 
-set ( TARGET_SERVER "tt3d-server" )
-set ( TARGET_CLIENT "tt3d-client" )
-
+set ( TARGET_SERVER "${PROJECT_NAME}-server" )
+set ( TARGET_CLIENT "${PROJECT_NAME}-client" )
+set ( TARGET_COMMON "${PROJECT_NAME}-common" )
 
 #-------------------------------------------------------------
 # Dependency checks.
-#
+#-------------------------------------------------------------
+#set( Boost_DEBUG ON )
+#set ( Boost_DIR "~/src/boost_1_42_0" )
+set ( BOOST_ROOT "~/src/boost_1_42_0" )
+set ( Boost_ADDITIONAL_VERSIONS "1.40" "1.41" "1.42" "1.42.0" "1.43" "1.44" )
+set ( BOOST_LIBRARYDIR ${BOOST_ROOT}/stage/lib )
 set ( Boost_USE_STATIC_LIBS OFF )
 set ( Boost_USE_MULTITHREAD ON )
 find_package        ( Lua51 REQUIRED )
-find_package        ( Boost COMPONENTS unit_test_framework system thread )
+find_package        ( Boost 1.39 REQUIRED COMPONENTS unit_test_framework system thread )
+set ( Boost_LIBRARY_DIRS ${BOOST_ROOT}/stage/lib )
 find_package        ( ProtocolBuffers REQUIRED )
 #glog
 
@@ -37,7 +43,7 @@ message( STATUS ${PROTO_SRCS} )
 
 file (GLOB_RECURSE SERVER_SRC   RELATIVE ${CMAKE_SOURCE_DIR} src/server/*.cpp src/server/*.c src/server/*.hpp src/server/*.h )
 file (GLOB_RECURSE CLIENT_SRC   RELATIVE ${CMAKE_SOURCE_DIR} src/client/*.cpp src/client/*.c src/client/*.hpp src/client/*.h )
-
+file (GLOB_RECURSE COMMON_SRC   RELATIVE ${CMAKE_SOURCE_DIR} src/core/*.cpp src/core/*.c src/core/*.hpp src/core/*.h )
 
 
 #set ( CMAKE_BUILD_TYPE Release )
@@ -73,16 +79,18 @@ set ( COMMON_LIBS
 )
 
 set ( SERVER_LIBS
-
+  ${TARGET_COMMON}
 )
 set ( CLIENT_LIBS
-
+  ${TARGET_COMMON}
 )
 
 link_directories (
    ${CMAKE_SOURCE_DIR}/3rdparty/lib
+   ${Boost_LIBRARY_DIRS}
 )
-
+#message( STATUS ${Boost_LIBRARIES} )
+#message( STATUS ${Boost_LIBRARY_DIRS} )
 include_directories ( ${INCLUDE_DIRS} )
 
 # Preprocessor
@@ -99,15 +107,17 @@ endif ( CMAKE_BUILD_TYPE STREQUAL "Debug" )
 # -------------------------------------------------------------
 # Targets
 # -------------------------------------------------------------
+add_library( ${TARGET_COMMON} STATIC ${PROTO_SRCS} ${COMMON_SRC} )
 add_executable( ${TARGET_SERVER} ${SERVER_SRC} ${PROTO_SRCS} )
 add_executable( ${TARGET_CLIENT} ${PROTO_SRCS} ${CLIENT_SRC} )
 
 add_subdirectory( ${3RDPARTY} )
-add_dependencies( ${TARGET_SERVER} depends )
-add_dependencies( ${TARGET_CLIENT} ${PROTO_SRCS} )
+add_dependencies( ${TARGET_SERVER} ${TARGET_COMMON} )
+add_dependencies( ${TARGET_CLIENT} ${TARGET_COMMON} ${PROTO_SRCS} )
 
-target_link_libraries ( ${TARGET_SERVER} ${COMMON_LIBS} ${SERVER_LIBS} )
-target_link_libraries ( ${TARGET_CLIENT} ${COMMON_LIBS} ${CLIENT_LIBS} )
+target_link_libraries ( ${TARGET_CLIENT} ${CLIENT_LIBS} )
+target_link_libraries ( ${TARGET_SERVER} ${SERVER_LIBS} )
+target_link_libraries ( ${TARGET_COMMON} ${COMMON_LIBS} )
 
 
 

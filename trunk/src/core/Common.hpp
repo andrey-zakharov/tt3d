@@ -22,6 +22,9 @@ arraysize( T( &x )[ N ] ) {
 
 
 //to Types.hpp
+typedef unsigned char      uint8;
+typedef unsigned short     uint16;
+typedef unsigned int       uint32;
 #ifdef COMPILER_MSVC
 typedef __int64             int64;
 typedef unsigned __int64    uint64;

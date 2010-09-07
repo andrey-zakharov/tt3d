@@ -35,8 +35,8 @@ public:
     RpcController( const string name = "NoNameRpcController" ) : mNotifier( new Notifier( name ) ) { }
 
     void
-    Reset( ) {
-        mstrFailed.clear( );
+    Reset() {
+        mstrFailed.clear();
         mNotifier.reset( new Notifier( "RPCController" ) );
     }
 
@@ -46,20 +46,20 @@ public:
     }
 
     bool
-    Failed( ) const {
-        return !mstrFailed.empty( );
+    Failed() const {
+        return !mstrFailed.empty();
     }
 
     string
-    ErrorText( ) const {
+    ErrorText() const {
         return mstrFailed;
     }
 
     void
-    StartCancel( ) { }
+    StartCancel() { }
 
     bool
-    IsCanceled( ) const {
+    IsCanceled() const {
         return false;
     }
 
@@ -67,8 +67,8 @@ public:
     NotifyOnCancel( google::protobuf::Closure *callback ) { }
 
     bool
-    Wait( ) {
-        return mNotifier->Wait( );
+    Wait() {
+        return mNotifier->Wait();
     }
 
     bool
@@ -77,8 +77,8 @@ public:
     }
 
     void
-    Notify( ) {
-        mNotifier->Notify( );
+    Notify() {
+        mNotifier->Notify();
     }
 private:
     string                          mstrFailed;
@@ -120,59 +120,59 @@ public:
     }
 
     virtual void
-    Disconnect( ) {
-        if ( mStatus->IsClosing( ) ) {
-            VLOG( 2 ) << "Disconnect " << Name( ) << " but is closing";
+    Disconnect() {
+        if ( mStatus->IsClosing() ) {
+            VLOG( 2 ) << "Disconnect " << Name() << " but is closing";
             return;
         }
-        VLOG( 2 ) << "Disconnect " << Name( );
-        mStatus->Mutex( ).lock_shared( );
+        VLOG( 2 ) << "Disconnect " << Name();
+        mStatus->Mutex().lock_shared();
         if ( impl_ ) {
             impl_->Disconnect( mStatus, false );
             return;
         }
-        mStatus->Mutex( ).unlock_shared( );
-        VLOG( 2 ) << "Disconnected " << Name( );
+        mStatus->Mutex().unlock_shared();
+        VLOG( 2 ) << "Disconnected " << Name();
     }
 
     virtual bool
-    IsConnected( ) const {
-        return !mStatus->IsIdle( ) && !mStatus->IsClosing( );
+    IsConnected() const {
+        return !mStatus->IsIdle() && !mStatus->IsClosing();
     }
 
     const string
-    Name( ) const {
-        return impl_.get( ) ? impl_->Name( ) : mName;
+    Name() const {
+        return impl_.get() ? impl_->Name() : mName;
     }
 
     virtual
-    ~Connection( ) {
-        CHECK( !IsConnected( ) );
+    ~Connection() {
+        CHECK( !IsConnected() );
     }
 
     virtual int
-    timeout( ) const {
+    Timeout() const {
         return kTimeoutSec;
     }
 
     virtual bool
-    period( ) const {
-        return IsConnected( );
+    Period() const {
+        return IsConnected();
     }
 
     virtual void
-    Expired( ) {
-        VLOG( 2 ) << Name( ) << " Expired";
-        mStatus->Mutex( ).lock_shared( );
+    Expired() {
+        VLOG( 2 ) << Name() << " Expired";
+        mStatus->Mutex().lock_shared();
 
-        if ( mStatus->IsClosing( ) ) {
-            VLOG( 2 ) << "Heartbeat " << Name( ) << " but is closing";
-            mStatus->Mutex( ).unlock_shared( );
+        if ( mStatus->IsClosing() ) {
+            VLOG( 2 ) << "Heartbeat " << Name() << " but is closing";
+            mStatus->Mutex().unlock_shared();
             return;
         }
 
-        if ( impl_.get( ) == NULL ) {
-            mStatus->Mutex( ).unlock_shared( );
+        if ( impl_.get() == NULL ) {
+            mStatus->Mutex().unlock_shared();
             return;
         }
         
@@ -180,25 +180,25 @@ public:
     }
 
     inline bool
-    ScheduleWrite( ) {
-        RawConnectionStatus::Locker locker( mStatus->Mutex( ) );
-        if ( mStatus->IsClosing( ) ) {
-            VLOG( 2 ) << "ScheduleWrite " << Name( ) << " but is closing";
+    ScheduleWrite() {
+        RawConnectionStatus::Locker locker( mStatus->Mutex() );
+        if ( mStatus->IsClosing() ) {
+            VLOG( 2 ) << "ScheduleWrite " << Name() << " but is closing";
             return false;
         }
-        return impl_.get( ) && impl_->ScheduleWrite( mStatus );
+        return impl_.get() && impl_->ScheduleWrite( mStatus );
     }
 
-    template <typename T>
+    template < typename T >
     // The push will take the ownership of the data
     inline bool
     PushData( const T &data ) {
-        RawConnectionStatus::Locker locker( mStatus->Mutex( ) );
-        if ( mStatus->IsClosing( ) ) {
-            VLOG( 2 ) << "PushData " << Name( ) << " but is closing";
+        RawConnectionStatus::Locker locker( mStatus->Mutex() );
+        if ( mStatus->IsClosing() ) {
+            VLOG( 2 ) << "PushData " << Name() << " but is closing";
             return false;
         }
-        return impl_.get( ) && impl_->PushData( data );
+        return impl_.get() && impl_->PushData( data );
     }
     // Create a connection from a socket.
     // The protocol special class should implment it.
@@ -207,21 +207,21 @@ protected:
     static int globalConnectionId;
 
     void
-    ImplClosed( ) {
+    ImplClosed() {
         VLOG( 2 ) << mName << "ImplClosed";
         boost::mutex::scoped_lock locker( mListenerMutex );
         
-        for ( int i = 0; i < mListeners.size( ); ++i ) {
-            VLOG( 2 ) << "listener " << i << " expired: " << mListeners[i].expired( );
-            boost::shared_ptr<IAsyncCloseListener> listener = mListeners[i].lock( );
+        for ( int i = 0; i < mListeners.size(); ++i ) {
+            VLOG( 2 ) << "listener " << i << " expired: " << mListeners[i].expired();
+            boost::shared_ptr<IAsyncCloseListener> listener = mListeners[i].lock();
 
-            if ( !mListeners[i].expired( ) ) {
+            if ( !mListeners[i].expired() ) {
                 listener->ConnectionClosed( this );
             }
         }
         
-        mListeners.clear( );
-        impl_.reset( );
+        mListeners.clear();
+        impl_.reset();
     }
     
     boost::intrusive_ptr< RawConnectionStatus > mStatus;

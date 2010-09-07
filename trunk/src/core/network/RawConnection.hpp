@@ -22,7 +22,7 @@
 #include "Network.hpp"
 #include <boost/logic/tribool.hpp>
 #include <boost/tuple/tuple.hpp>
-#include <boost/signal.hpp>
+#include <boost/signals2/signal.hpp>
 #include <boost/thread/shared_mutex.hpp>
 #include <boost/function.hpp>
 #include <boost/smart_ptr.hpp>
@@ -33,64 +33,64 @@ class RawConnectionStatus {
 public:
     typedef boost::shared_lock< boost::shared_mutex > Locker;
 
-    RawConnectionStatus( ) : status_( 0 ), mIntrusiveCount( 0 ) { }
+    RawConnectionStatus() : status_( 0 ), mIntrusiveCount( 0 ) { }
 
-    ~RawConnectionStatus( ) {
+    ~RawConnectionStatus() {
         CHECK_EQ( mIntrusiveCount, 0 );
     }
 
     bool
-    IsReading( ) const {
+    IsReading() const {
         return status_ & READING;
     }
 
     bool
-    IsWriting( ) const {
+    IsWriting() const {
         return status_ & WRITTING;
     }
 
     void
-    SetReading( ) {
+    SetReading() {
         atomic_or( &status_, READING );
     }
 
     void
-    SetWriting( ) {
+    SetWriting() {
         atomic_or( &status_, WRITTING );
     }
 
     void
-    ClearReading( ) {
+    ClearReading() {
         atomic_and( &status_, ~READING );
     }
 
     void
-    ClearWriting( ) {
+    ClearWriting() {
         atomic_and( &status_, ~WRITTING );
     }
 
     void
-    SetClosing( ) {
+    SetClosing() {
         atomic_or( &status_, CLOSING );
     }
 
     bool
-    IsClosing( ) const {
+    IsClosing() const {
         return status_ & CLOSING;
     }
 
     bool
-    IsIdle( ) const {
+    IsIdle() const {
         return status_ == IDLE;
     }
 
     int
-    Status( ) const {
+    Status() const {
         return status_;
     }
 
     boost::shared_mutex &
-    Mutex( ) {
+    Mutex() {
         return mutex_;
     }
 private:
@@ -133,10 +133,10 @@ public:
     void InitSocket( StatusPtr status, TcpSocket *socket );
 
     const string
-    Name( ) const {
+    Name() const {
         return name_;
     }
-    virtual ~RawConnection( );
+    virtual ~RawConnection();
 protected:
     static const char kHeartBeat = 0xb;
     static const int kDefaultTimeoutMs = 30000;
@@ -144,17 +144,17 @@ protected:
     template < class T > void InternalPushData( const T &data );
 
     SharedConstBuffers *
-    incoming( ) {
+    incoming() {
         return &duplex_[ incoming_index_ ];
     }
 
     SharedConstBuffers *
-    outcoming( ) {
+    outcoming() {
         return &duplex_[1 - incoming_index_];
     }
 
     void
-    SwitchIO( ) {
+    SwitchIO() {
         //    CHECK(outcoming()->empty());
         // Switch the working vector.
         incoming_index_ = 1 - incoming_index_;
@@ -175,7 +175,7 @@ protected:
     static const int kBufferSize = 8192;
     static const int kHeartbeatUnsyncWindow = 2;
     typedef boost::array< char, kBufferSize > BufferType;
-    BufferType mBuffer;
+    BufferType                      mBuffer;
 
     int                             incoming_index_;
     SharedConstBuffers              duplex_[ 2 ];
@@ -195,15 +195,15 @@ public:
     RawConnectionImpl( const string &name, boost::shared_ptr< Connection > connection ) :
         RawConnection( name, connection ) { }
 protected:
-    inline bool Decode( size_t bytes_transferred );
-    virtual bool Handle( const Decoder *decoder ) = 0;
-    Decoder decoder_;
+    inline bool         Decode( size_t bytes_transferred );
+    virtual bool        Handle( const Decoder *decoder ) = 0;
+    Decoder             decoder_;
 };
 
 template < typename Decoder >
 bool RawConnectionImpl< Decoder >::Decode( size_t bytes_transferred ) {
     boost::tribool result;
-    const char *start = mBuffer.data( );
+    const char *start = mBuffer.data();
     const char *end = start + bytes_transferred;
     const char *p = start;
     
@@ -211,16 +211,16 @@ bool RawConnectionImpl< Decoder >::Decode( size_t bytes_transferred ) {
         boost::tie( result, p ) =
                 decoder_.Decode( p, end );
         if ( result ) {
-            VLOG( 2 ) << Name( ) << " : " << "Handle lineformat: size: " << ( p - start );
+            VLOG( 2 ) << Name() << " : " << "Handle lineformat: size: " << ( p - start );
             if ( !Handle( &decoder_ ) ) {
                 return false;
             }
-            decoder_.reset( );
+            decoder_.reset();
         } else if ( !result ) {
-            VLOG( 2 ) << Name( ) << " : " << "Parse error";
+            VLOG( 2 ) << Name() << " : " << "Parse error";
             return false;
         } else {
-            VLOG( 2 ) << Name( ) << " : " << "Need to read more data";
+            VLOG( 2 ) << Name() << " : " << "Need to read more data";
             return true;
         }
     }

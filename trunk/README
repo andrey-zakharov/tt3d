@@ -6,3 +6,7 @@ http://google-glog.googlecode.com/files/glog-0.3.1.tar.gz
 ./configure --prefix=/home/you/src/tt3d/3rdparty/
 make
 make install
+
+
+
+TODO: core, network namespaces

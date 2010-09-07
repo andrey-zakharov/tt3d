@@ -2,7 +2,7 @@
  * File:   RawConnection.hpp
  * Author: vaulter
  *
- * Created on 6 Сентябрь 2010 г., 3:09
+ * Created on 6 РЎРµРЅС‚СЏР±СЂСЊ 2010 Рі., 3:09
  */
 
 #ifndef RAWCONNECTION_HPP

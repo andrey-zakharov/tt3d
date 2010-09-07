@@ -2,7 +2,7 @@
  * File:   NetworkClient.hpp
  * Author: vaulter
  *
- * Created on 4 Сентябрь 2010 г., 12:45
+ * Created on 4 РЎРµРЅС‚СЏР±СЂСЊ 2010 Рі., 12:45
  */
 
 #ifndef NETWORKCLIENT_HPP

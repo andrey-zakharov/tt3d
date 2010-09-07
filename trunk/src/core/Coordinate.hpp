@@ -2,7 +2,7 @@
  * File:   coordinate.hpp
  * Author: vaulter
  *
- * Created on 31 ¿‚„ÛÒÚ 2010 „., 0:23
+ * Created on 31 –ê–≤–≥—É—Å—Ç 2010 –≥., 0:23
  */
 
 #ifndef COORDINATE_HPP

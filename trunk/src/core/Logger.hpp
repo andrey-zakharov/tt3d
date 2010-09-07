@@ -2,7 +2,7 @@
  * File:   Logger.hpp
  * Author: vaulter
  *
- * Created on 5 Сентябрь 2010 г., 23:41
+ * Created on 5 РЎРµРЅС‚СЏР±СЂСЊ 2010 Рі., 23:41
  */
 
 #ifndef LOGGER_HPP

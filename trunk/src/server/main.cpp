@@ -67,7 +67,7 @@ void testLua() {
     // make my_function() available to Lua programs
     lua_register( L, "PrintNumber", LS_PrintNumber );
 
-    int status = luaL_loadfile( L, "test.lua" ); //загрузить файл
+    int status = luaL_loadfile( L, "test.lua" ); //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
 
     if ( status ) {
         error( 0, status, "cannot run lua file: %s", lua_tostring(L, -1) );

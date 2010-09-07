@@ -2,7 +2,7 @@
  * File:   i_renderer.hpp
  * Author: vaulter
  *
- * Created on 19 ¿‚„ÛÒÚ 2010 „., 23:00
+ * Created on 19 –ê–≤–≥—É—Å—Ç 2010 –≥., 23:00
  */
 
 #ifndef I_RENDERER_HPP

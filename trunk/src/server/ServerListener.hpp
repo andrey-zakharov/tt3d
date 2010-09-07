@@ -2,7 +2,7 @@
  * File:   ServerListener.hpp
  * Author: vaulter
  *
- * Created on 3 Сентябрь 2010 г., 23:53
+ * Created on 3 РЎРµРЅС‚СЏР±СЂСЊ 2010 Рі., 23:53
  */
 
 #ifndef SERVERLISTENER_HPP

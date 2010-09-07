@@ -13,6 +13,7 @@
 #include <vector>
 #include <string>
 #include <boost/shared_ptr.hpp>
+#include <boost/bind.hpp>
 #include "Logger.hpp"
 #include "Executor.hpp"
 #include "PCQueue.hpp"

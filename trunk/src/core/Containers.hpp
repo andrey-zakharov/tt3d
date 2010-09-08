@@ -7,7 +7,7 @@
 
 #ifndef CONTAINERS_HPP
 #define	CONTAINERS_HPP
-#include "Hash.hpp"
+#include "network/Hash.hpp"
 /**
  * code include this header for list, vector, ....
  * this file candidate for redefining by

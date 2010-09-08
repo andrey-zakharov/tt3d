@@ -4,11 +4,12 @@
 #include <boost/asio.hpp>
 
 #include "lua.hpp"
-#include "ServerListener.hpp"
+#include "Network.hpp"
+#include "network/ProtobufConnection.cpp"
+#include "network/Server.hpp"
 
-typedef boost::asio::io_service IOService;
 
-using server::ServerListener;
+//using server::ServerListener;
 
 static int
 LS_PrintNumber( lua_State *L ) {
@@ -37,12 +38,12 @@ main( int argc, char *argv[] ) {
 
     try {
 
-        IOService io;
-        ServerListener server( io );
-        //server.Config();
-        server.Start();
+        boost::shared_ptr< ProtobufConnection >     server_connection_template;
+        boost::shared_ptr< Server >                 server( new Server( 2, 4 ) );
 
-        io.run( );
+        string listen_addr( "0.0.0.0" ), listen_port( "33000" );
+        server->Listen( listen_addr, listen_port, server_connection_template.get() );
+        
 
     } catch ( std::exception& e ) {
         std::cerr << e.what( ) << std::endl;

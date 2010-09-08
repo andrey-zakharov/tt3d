@@ -128,13 +128,9 @@ target_link_libraries ( ${TARGET_COMMON} ${COMMON_LIBS} )
 message( STATUS "Configured in ${CMAKE_BUILD_TYPE}" )
 set ( TESTS_SOURCES 
   src/test/TestMain.cpp
-  src/core/thread/ThreadPool.hpp
-  src/core/network/IOServicePool.cpp
-  src/client/NetworkClient.cpp 
-  src/core/network/Connection.cpp
-  src/core/network/RawConnection.cpp
-  src/core/TimerMaster.cpp
-  src/test/TimerMasterTest.cpp
+  src/test/TestThreadPool.cpp
+  src/test/TestIOServicePool.cpp
+  src/test/TestTimerMaster.cpp
   src/test/ListenTest.cpp
 )
 set ( TEST test_${CMAKE_PROJECT_NAME} )

@@ -9,7 +9,7 @@
 #define	NETWORKCLIENT_HPP
 #include <queue>
 #include <string>
-#include "Message.hpp"
+#include "network/Message.hpp"
 #include "Network.hpp"
 
 using std::string;

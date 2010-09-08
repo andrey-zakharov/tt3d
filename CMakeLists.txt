@@ -38,7 +38,7 @@ find_package        ( ProtocolBuffers REQUIRED )
 # -------------------------------------------------------------
 
 #Prepare ProtoBuf 
-WRAP_PROTO( PROTO_SRCS proto/meta.proto )
+WRAP_PROTO( PROTO_SRCS "proto/meta.proto" "proto/hello.proto" )
 message( STATUS ${PROTO_SRCS} )
 
 file (GLOB_RECURSE SERVER_SRC   RELATIVE ${CMAKE_SOURCE_DIR} src/server/*.cpp src/server/*.c src/server/*.hpp src/server/*.h )
@@ -60,7 +60,8 @@ set ( INCLUDE_DIRS
   ${CMAKE_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/src
   ${CMAKE_SOURCE_DIR}/inc
-  ${CMAKE_SOURCE_DIR}/src/core/network
+  ${CMAKE_SOURCE_DIR}/src/core
+  ${CMAKE_SOURCE_DIR}/src/server
 
   # for proto/meta.pb.h
   ${CMAKE_CURRENT_BINARY_DIR}
@@ -129,16 +130,16 @@ set ( TESTS_SOURCES
   src/test/TestMain.cpp
   src/core/thread/ThreadPool.hpp
   src/core/network/IOServicePool.cpp
-  src/server/ServerListener.cpp 
   src/client/NetworkClient.cpp 
   src/core/network/Connection.cpp
   src/core/network/RawConnection.cpp
   src/core/TimerMaster.cpp
   src/test/TimerMasterTest.cpp
+  src/test/ListenTest.cpp
 )
 set ( TEST test_${CMAKE_PROJECT_NAME} )
 add_executable ( ${TEST} ${TESTS_SOURCES}  ${PROTO_SRCS} )
-target_link_libraries ( ${TEST} ${PROJECT} ${COMMON_LIBS} ${CLIENT_LIBS} ${SERVER_LIBS} )
+target_link_libraries ( ${TEST} ${PROJECT} ${COMMON_LIBS} ${CLIENT_LIBS} ${SERVER_LIBS}  ${TARGET_COMMON} )
 enable_testing ()
 add_test ( ${TEST} ${TEST} )
 

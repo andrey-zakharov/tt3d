@@ -2,7 +2,7 @@
 #include <boost/bind.hpp>
 #include "Network.hpp"
 #include "NetworkClient.hpp"
-#include "IOServicePool.hpp"
+#include "network/IOServicePool.hpp"
 
 namespace client {
 

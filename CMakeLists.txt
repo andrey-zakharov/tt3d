@@ -38,7 +38,7 @@ find_package        ( ProtocolBuffers REQUIRED )
 # -------------------------------------------------------------
 
 #Prepare ProtoBuf 
-WRAP_PROTO( PROTO_SRCS "proto/meta.proto" "proto/hello.proto" )
+WRAP_PROTO( PROTO_SRCS "proto/meta.proto" "proto/hello.proto" "proto/general.proto" )
 message( STATUS ${PROTO_SRCS} )
 
 file (GLOB_RECURSE SERVER_SRC   RELATIVE ${CMAKE_SOURCE_DIR} src/server/*.cpp src/server/*.c src/server/*.hpp src/server/*.h )

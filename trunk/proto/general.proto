@@ -1,0 +1,73 @@
+package protocol;
+/// to really makes clients dunno nothing about server
+/// we need to separate this file to server.proto client.proto and common.proto
+// <editor-fold defaultstate="collapsed" desc="messages">
+message GeneralResponse {
+    optional int32	code	= 1 [default = 0];	    ///<error code, 0 if no
+    optional string	text	= 2;			    ///< status text if any
+    optional bool	close	= 3 [default = false];	    ///< client should close connection
+};
+
+message ClientRequest {
+    required string	login	    = 1;   ///< some identifier of client.
+    optional string	password    = 2;   ///< optional password if game is multiplayer
+};
+
+message ClientResponse {
+    required	GeneralResponse	response    = 1;
+    optional	ClientID	client	    = 2; ///< authorized ticket to use
+};
+
+message ClientID    {// identificator. can be used for fast session validation
+    required	fixed32		clientID    = 1; ///< hash of client to use
+    optional	string		ticket	    = 2; ///< session ticket
+}
+
+/// coordinates in plain map dimensions
+message Viewport    {
+    required	    sfixed64	x   = 1; ///< coordinates of the world
+    required	    sfixed64	y   = 2; ///< coordinates of the world
+    enum    ViewSize	{
+	SMALL	= 1;
+	MEDIUM	= 2;
+	LARGE	= 3;
+    } // but I prefer some distance number
+    optional ViewSize viewsize		= 3	[default = MEDIUM]; ///< or as integer in coords
+    optional sfixed64	iviewsize	= 4;  ///< or in parrots
+};
+
+
+/// client register viewport which can be several per client
+message RegisterViewportRequest	{
+    required	ClientID    client	= 1;
+    required	Viewport    viewport	= 2;
+};
+
+message	RegisterViewportResponse {
+    required	GeneralResponse	response	= 1;
+    optional	fixed32		viewportID	= 2; ///< id of viewport. can be individual for client
+}
+
+message ChangeViewportRequest	{
+    required	ClientID    client	= 1;
+    required	fixed32	    viewportID  = 2;
+    required	Viewport    viewport	= 3;
+} // answer is RegisterViewportResponse
+
+message UnregisterViewportRequest {
+    required	ClientID	client		= 1;
+    required	fixed32		viewportID	= 2; ///< id of viewport. can be individual for client
+} // answer is RegisterViewportResponse
+
+//also current players, map, vehicles and so on packets HERE...
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="services">
+service	clients	{
+    rpc	Register    (ClientRequest) returns (ClientResponse);
+    rpc Unregister  (ClientRequest) returns (ClientResponse);
+    rpc RegistreViewport    (RegisterViewportRequest)	returns (RegisterViewportResponse);
+    rpc ChangeViewport	    (ChangeViewportRequest)	returns (RegisterViewportResponse);
+    rpc UnregisterViewport  (UnregisterViewportRequest)	returns (RegisterViewportResponse);
+}
+// </editor-fold>

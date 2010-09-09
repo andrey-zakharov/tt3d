@@ -189,7 +189,7 @@ BOOST_FIXTURE_TEST_SUITE( ListenTest, ListenTestFixture )
 
 BOOST_AUTO_TEST_CASE( Test1 ) {
     Hello::EchoRequest request;
-    boost::shared_ptr<Hello::EchoResponse> response( new Hello::EchoResponse );
+    boost::shared_ptr< Hello::EchoResponse > response( new Hello::EchoResponse );
     request.set_question( "client question" );
     boost::shared_ptr<RpcController> controller( new RpcController );
     client_stub_->Echo1( controller.get(),

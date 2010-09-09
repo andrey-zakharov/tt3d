@@ -5,9 +5,10 @@
 
 #include "lua.hpp"
 #include "Network.hpp"
-#include "network/ProtobufConnection.cpp"
+#include "network/ProtobufConnection.hpp"
+//server
 #include "network/Server.hpp"
-
+#include "network/RpcServiceClients.hpp"
 
 //using server::ServerListener;
 
@@ -38,11 +39,20 @@ main( int argc, char *argv[] ) {
 
     try {
 
-        boost::shared_ptr< ProtobufConnection >     server_connection_template;
+        boost::shared_ptr< ProtobufConnection >     server_connection_template( new ProtobufConnection( "Listen.Server" ) );
+        boost::shared_ptr< RpcServiceClients >      rpc_service_clients( new RpcServiceClients() );
+        server_connection_template->RegisterService( rpc_service_clients.get() );
+
         boost::shared_ptr< Server >                 server( new Server( 2, 4 ) );
 
         string listen_addr( "0.0.0.0" ), listen_port( "33000" );
         server->Listen( listen_addr, listen_port, server_connection_template.get() );
+
+        bool hup = false;
+
+        while( !hup ) {
+            sleep( 1 );
+        }
         
 
     } catch ( std::exception& e ) {

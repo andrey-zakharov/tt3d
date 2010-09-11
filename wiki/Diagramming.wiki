@@ -11,6 +11,7 @@ Add your content here.  Format your content with:
   * Text in *bold* or _italic_
   * Headings, paragraphs, and lists
   * Automatic links to other wiki pages
+http://yuml.me/diagram/scruffy/class/[Hub]+--%3E[%3C%3CITrackSection%3E%3E;TrackSection],%20[%3C%3CITrackSection%3E%3E;TrackSection]%5E-[RailTrackSection%7C+TieType;+BallastType;+ElecType],%20[%3C%3CITrackSection%3E%3E;TrackSection]%5E-[RoadTrackSection%7C+SurfaceType],%20[%3C%3CITrack%3E%3E;Track]++-%3E[%3C%3CITrackSection%3E%3E;TrackSection],%20[Hub]+--%3E[%3C%3CITrack%3E%3E;Track],%20[%3C%3CITrack%3E%3E;Track]%5E-[RailTrack],%20[%3C%3CITrack%3E%3E;Track]%5E-[RoadTrack],%20[%3C%3CIRoute%3E%3E;Route]+consist%20of%20%3E[%3C%3CITrack%3E%3E;Track],%20[RouteGraph%7C%7C+FindRoutes()]1-0..*[Hub],%20[RouteGraph]1-0..*[%3C%3CITrack%3E%3E;Track],%20[RouteGraph]1-0..*[%3C%3CIRoute%3E%3E;Route]
 
 <img src="http://yuml.me/diagram/scruffy/class/[Hub]+-->[<<ITrackSection>>;TrackSection], [<<ITrackSection>>;TrackSection]^-[RailTrackSection|+TieType;+BallastType;+ElecType], [<<ITrackSection>>;TrackSection]^-[RoadTrackSection|+SurfaceType], [<<ITrack>>;Track]++->[<<ITrackSection>>;TrackSection], [Hub]+-->[<<ITrack>>;Track], [<<ITrack>>;Track]^-[RailTrack], [<<ITrack>>;Track]^-[RoadTrack], [<<IRoute>>;Route]+consist of >[<<ITrack>>;Track], [RouteGraph||+FindRoutes()]1-0..*[Hub], [RouteGraph]1-0..*[<<ITrack>>;Track], [RouteGraph]1-0..*[<<IRoute>>;Route]" alt='UML' />
 

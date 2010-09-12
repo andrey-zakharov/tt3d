@@ -1,1 +1,26 @@
+=Networking=
+
+==Low network layer==
+http://yuml.me/32c92f29?.png
+
+{{{
+[protobuf::RpcController]^[RpcController]
+[RpcController]^[Connection]
+[protobuf::RpcChannel]^[Connection{bg:white}]
+[Connection]^[ProtobufConnection]
+[ProtobufConnection]^[ClientConnection]
+[<<noncopyable>>]^-.-[RawConnection]
+[RawConnection]^[RawConnectionImpl]
+[RawConnectionImpl]uses -.->[Decoder]
+[RawConnectionImpl]^[RawProtobufConnection]
+[RawProtobufConnection]uses -.->[ProtobufDecoder]
+[Connection]<>1-1[RawConnection]
+[Server{bg:blue]<>-*[Connection]
+[Server]-.-[ProtobufConnection]
+[Client{bg:red}]<>-1[Connection]
+[Client]-.-[ClientConnection]
+[Decoder]-.-[ProtobufDecoder]
+}}}
+
+==Draft==
 http://img687.imageshack.us/img687/3586/test2pr.png

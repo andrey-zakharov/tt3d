@@ -1,0 +1,40 @@
+#labels Phase-Design,Phase-Requirements
+#Simplified. Overall application scheme
+
+= High level =
+== Server side ==
+
+== Client side ==
+http://yuml.me/30269690
+{{{
+# Client. Simplified
+# yellow - ready to use
+# orange - RPC layer
+# green - engine layer
+[Renderer]^-.->[<<implementation>>;RendererEngine]
+[GUI]^-.->[<<implementation>>;GUIEngine]
+[Client{bg:red}]<>-*[ClientConnection{bg:yellow}]
+[<<RpcStub>>;Clients{bg:orange}]++-1[ClientConnection]
+[<<RpcStub>>;Landscape{bg:orange}]++-1[ClientConnection]
+[<<RpcStub>>;Tracks{bg:orange}]++-1[ClientConnection]
+[<<RpcStub>>;Vehicles{bg:orange}]++-1[ClientConnection]
+[<<RpcStub>>;Economy{bg:orange}]++-1[ClientConnection]
+[<<Controller>>;Clients{bg:green}]++-1[<<RpcStub>>;Clients]
+[<<Controller>>;Landscape{bg:green}]++-1[<<RpcStub>>;Landscape]
+[<<Controller>>;Tracks{bg:green}]++-1[<<RpcStub>>;Tracks]
+[<<Controller>>;Vehicles{bg:green}]++-1[<<RpcStub>>;Vehicles]
+[<<Controller>>;Economy{bg:green}]++-1[<<RpcStub>>;Economy]
+[Renderer]<->[<<Controller>>;Clients]
+[Renderer]<->[<<Controller>>;Landscape]
+[Renderer]<->[<<Controller>>;Tracks]
+[Renderer]<->[<<Controller>>;Vehicles]
+[Renderer]<->[<<Controller>>;Economy]
+[Renderer]<-[GUI]
+[Input]->[GUI]
+[GUI]<->[<<Controller>>;Clients]
+[GUI]<->[<<Controller>>;Landscape]
+[GUI]<->[<<Controller>>;Tracks]
+[GUI]<->[<<Controller>>;Vehicles]
+[GUI]<->[<<Controller>>;Economy]
+}}}
+

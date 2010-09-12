@@ -126,7 +126,8 @@ target_link_libraries ( ${TARGET_COMMON} ${COMMON_LIBS} )
 # Tests
 # -------------------------------------------------------------
 message( STATUS "Configured in ${CMAKE_BUILD_TYPE}" )
-set ( TESTS_SOURCES 
+set ( TESTS_SOURCES
+    src/test/TestClients.cpp
   src/test/TestMain.cpp
   src/test/TestThreadPool.cpp
   src/test/TestIOServicePool.cpp

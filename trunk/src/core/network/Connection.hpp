@@ -201,7 +201,7 @@ public:
         return impl_.get() && impl_->PushData( data );
     }
     // Create a connection from a socket.
-    // The protocol special class should implment it.
+    // The protocol special class should implement it.
     virtual boost::shared_ptr< Connection > Span( TcpSocket *socket ) = 0;
 protected:
     static int globalConnectionId;
@@ -233,5 +233,5 @@ protected:
     friend class RawConnection;
 };
 
-typedef shared_ptr< Connection >        ConnectionPtr;
+typedef boost::shared_ptr< Connection >        ConnectionPtr;
 #endif // NET2_CONNECTION_HPP_

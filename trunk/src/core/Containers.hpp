@@ -17,9 +17,11 @@
  */
 
 #include <list>
-
+using               std::list;
 #define List        std::list
 
+#include <map>
+using               std::map;
 //#include <base/hash.hpp>
 
 #include <ext/hash_map>

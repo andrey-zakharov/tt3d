@@ -11,6 +11,7 @@
 #include "network/RpcServiceClients.hpp"
 
 //using server::ServerListener;
+using server::RpcServiceClients;
 
 static int
 LS_PrintNumber( lua_State *L ) {
@@ -32,6 +33,8 @@ LS_PrintNumber( lua_State *L ) {
 
 void testLua();
 
+// will assume that on one server one game to simlify
+// also server is singleton then
 int
 main( int argc, char *argv[] ) {
     std::cout << "Hello! " << std::endl;
@@ -48,7 +51,7 @@ main( int argc, char *argv[] ) {
         string listen_addr( "0.0.0.0" ), listen_port( "33000" );
         server->Listen( listen_addr, listen_port, server_connection_template.get() );
 
-        bool hup = false;
+        bool hup = false;//TODO
 
         while( !hup ) {
             sleep( 1 );

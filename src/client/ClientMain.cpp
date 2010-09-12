@@ -15,43 +15,45 @@
 #define port    "33000"
 
 bool done = false;
+
 class User {
 public:
+
     User() :
         controller( new RpcController )
-        {}
-        
-void
-DoRequest(  ) {
-    boost::shared_ptr<RpcController> controller( new RpcController );
-    protocol::ClientRequest request;
-    boost::shared_ptr< protocol::ClientResponse > response( new protocol::ClientResponse() );
-    request.set_login( "test" );
+    { }
 
-    //network level
-    boost::shared_ptr< ClientConnection >
-    client_connection( new ClientConnection( "ListenTestMainClient", server, port ) );
+    void
+    DoRequest() {
 
-    boost::shared_ptr< protocol::clients::Stub >
-    client_stub( new protocol::clients::Stub( client_connection.get() ) );
+        protocol::ClientRequest request;
+        boost::shared_ptr< protocol::ClientResponse > response( new protocol::ClientResponse() );
+        request.set_login( "test" );
 
-    client_connection->Connect();
+        //network level
+        boost::shared_ptr< ClientConnection >
+                client_connection( new ClientConnection( "ListenTestMainClient", server, port ) );
 
-    client_stub->Register(
-            controller.get(),
-            &request,
-            response.get(),
-            NewClosure( boost::bind( &User::ClientCallDone, this, response ) ));
-    
-}
+        boost::shared_ptr< protocol::clients::Stub >
+                client_stub( new protocol::clients::Stub( client_connection.get() ) );
 
-void ClientCallDone( boost::shared_ptr< protocol::ClientResponse > response ) {
-    LOG( INFO ) << "code: " << response->response().code() << ", id: " << response->client().clientid();
-    done = true;
-}
+        client_connection->Connect();
+
+        client_stub->Register(
+                controller.get(),
+                &request,
+                response.get(),
+                NewClosure( boost::bind( &User::ClientCallDone, this, response ) ) );
+
+    }
+
+    void
+    ClientCallDone( boost::shared_ptr< protocol::ClientResponse > response ) {
+        LOG( INFO ) << "code: " << response->response().code() << ", id: " << response->client().clientid();
+        done = true;
+    }
     boost::shared_ptr< RpcController > controller;
 };
-
 
 /**
  *
@@ -62,7 +64,7 @@ main( int argc, char** argv ) {
 
     User user;
     user.DoRequest();
-    while( !done ) {
+    while ( !done ) {
         sleep( 10 );
     }
     return 0;

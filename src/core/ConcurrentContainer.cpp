@@ -17,7 +17,6 @@ namespace base {
         if( ( find( mItems.begin(), mItems.end(), item ) == mItems.end() ) &&
             ( find_if( mItems.begin(), mItems.end(), uniq_predicate ) == mItems.end() )
         ) {
-
             mItems.push_back( item );
             return mItems.size();// will be 1 for first.. TODO - via GetNextId() :)
         }

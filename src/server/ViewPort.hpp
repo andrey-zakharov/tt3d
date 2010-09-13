@@ -12,8 +12,8 @@ namespace server {
 
     struct ViewPort {
         string name; // < some name for this viewport
-        uint64 x; //
-        uint64 y;
+        uint32 x; //
+        uint32 y;
 
         enum EViewSize {
             SMALL = 1,
@@ -22,9 +22,9 @@ namespace server {
         };
 
         union {
-            EViewSize evs;
-            uint64 ivs; //min and max = 100 and min( map.x,map.y )
-        } viewsize;
+            EViewSize   evs;
+            uint32         ivs; //min and max = 100 and min( map.x,map.y )
+        }       viewsize;
 
         // unique predicate... is name too .
         // name comes from client as string

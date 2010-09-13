@@ -12,7 +12,7 @@ public:
 
     Notifier( const string name, int initial_count = 1 ) : mName( name ), count_( initial_count ), notified_( false ) { }
 
-    const boost::function0<void>
+    const boost::function0< void >
     notify_handler( ) {
         return boost::bind( &Notifier::Notify, shared_from_this( ) );
     }

@@ -61,10 +61,10 @@ protected:
     int CascadeTimers( TimerVec *v, int index );
 
     
-    int timer_jiffies_;
-    TimerVec vecs_[ 4 ];
-    boost::mutex mutex_;
+    int                 timer_jiffies_;
+    TimerVec            vecs_[ 4 ];
+    boost::mutex        mutex_;
     boost::scoped_ptr< boost::thread > thread_;
-    volatile bool   mbStop;
+    volatile bool       mbStop;
 };
 #endif  // TIMER_MASTER_HPP_

@@ -19,7 +19,7 @@
 #define RawConnTrace VLOG(2) << Name() << ".protobuf : " << __func__ << " "
 
 RawProtobufConnection::~RawProtobufConnection() {
-    VLOG( 2 ) << Name() << " : " << "Distroy protobuf connection";
+    VLOG( 2 ) << Name() << " : " << "Destroy protobuf connection";
     ReleaseResponseTable();
 }
 

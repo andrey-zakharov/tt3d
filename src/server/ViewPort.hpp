@@ -8,12 +8,20 @@
 #ifndef VIEWPORT_HPP
 #define	VIEWPORT_HPP
 
+#include "Coordinate.hpp"
+using core::ThreeDCoordinate;
+
 namespace server {
 
+    /**
+     * This is viewport of MAP, not just a window.
+     * It has one camera on render side. but here store
+     * only direction of it
+     */
     struct ViewPort {
-        string name; // < some name for this viewport
-        uint32 x; //
-        uint32 y;
+        string                  name;       /// < Name for this viewport. Unique for each client
+        ThreeDCoordinate< int > pos;        /// < Current position of
+        ThreeDCoordinate< int > direction;  /// < Current direction to
 
         enum EViewSize {
             SMALL = 1,

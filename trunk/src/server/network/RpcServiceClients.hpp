@@ -89,8 +89,8 @@ namespace server {
             if ( client ) {
                 ViewPortPtr viewport( new ViewPort() );
                 viewport->name = request->viewport().name();
-                viewport->pos.value[ 0 ] = request->viewport().x();
-                viewport->y = request->viewport().y();
+                viewport->pos.x() = request->viewport().x();
+                viewport->pos.y() = request->viewport().y();
 
                 if ( request->viewport().has_viewsize() ) {
                     viewport->viewsize.evs = (ViewPort::EViewSize) request->viewport().viewsize();

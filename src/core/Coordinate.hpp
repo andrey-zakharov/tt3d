@@ -46,15 +46,16 @@ namespace core {
         Coordinate( TMeasure x, TMeasure y ) { value.push_back( x ); value.push_back( y ); }
 
         Coordinate( TMeasure x, TMeasure y, TMeasure z ) { value.push_back( x ); value.push_back( y ); value.push_back( z ); }
-        
-        const       TMeasure    GetX() { return value.at( AXISX ); } // below optimized
+
+        inline
+        const       TMeasure    getX() { return value.at( AXISX ); } // below optimized
 
         inline 
-        const       TMeasure    x() { return value.at( AXISX ); }
+        TMeasure&    x() { return value[ AXISX ]; }
         inline
-        const       TMeasure    y() { return value.at( AXISY ); }
+        TMeasure&    y() { return value.at( AXISY ); }
         inline
-        const       TMeasure    z() { return value.at( AXISZ ); }
+        TMeasure&    z() { return value.at( AXISZ ); }
 
         //common
         inline
@@ -88,6 +89,16 @@ namespace core {
             ret = pow( ret, 0.5 );
 
             return ret;
+        }
+
+        TMeasure & operator[]( int ofs ) {
+            //assert( ofs >= 0 && ofs < TDimens );
+            return value[ ofs ];
+        }
+
+        const TMeasure & operator[]( int ofs ) const {
+            //assert( ofs >= 0 && ofs < TDimens );
+            return value[ ofs ];
         }
 
     };

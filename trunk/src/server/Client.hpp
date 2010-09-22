@@ -17,31 +17,37 @@ namespace server {
     struct Client {
     public:
         string                      login;
-        map< string, ViewPortPtr >  viewports;
+        map< string, ViewPortPtr >  viewports; ///<
 
+        time_t                      lastActivity;   ///< Last network activity from client.
+        /// This is high-level hack.
+        /// should be done by some network connection timeout... 
 
-        Client( string user_name, ConnectionPtr conn ) :
+        Client( const string user_name, ConnectionPtr conn ) :
                 login( user_name ),
                 connection( conn )
         {};
 
-        Client( string user_name ) :
-                login( user_name )
+        Client( const string user_name, const string password_ = "" ) :
+                login( user_name ),
+                password( password_ )
         {};
         
     protected:
+        string          password; ///< User's password. Optional
         ConnectionPtr   connection;//not in use
     };
 
     typedef shared_ptr< Client >    ClientPtr;
 
     struct IsUniqueLoginPredicate {//to do abstract
-        string              target ;
+        ClientPtr              target ;
+
         IsUniqueLoginPredicate( const ClientPtr &client ) :
-            target( client->login ) {};
+            target( client ) {};
             
         bool    operator()( const ClientPtr &client ) {
-            return client->login == target;
+            return client->login == target->login;
         };
     };
 

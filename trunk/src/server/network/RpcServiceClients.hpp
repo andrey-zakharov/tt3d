@@ -41,7 +41,14 @@ namespace server {
             // here is place to pre check, but now lets Add works
             general_response->set_code( 0 ); //no error
 
-            ClientPtr new_client( new Client( request->login() ) ); //elevate to business level
+            ClientPtr new_client;//( new Client( request->login() ) ); //elevate to business level
+
+            if ( request->has_password() ) {
+                new_client.reset( new Client(request->login(), request->password() ) );
+            } else {
+                new_client.reset( new Client( request->login() ) );
+            }
+            
             // but what about keep connection!? TODO
             /* 
              * when new user comes with same name, we have to have some logic here:
@@ -82,7 +89,7 @@ namespace server {
             if ( client ) {
                 ViewPortPtr viewport( new ViewPort() );
                 viewport->name = request->viewport().name();
-                viewport->x = request->viewport().x();
+                viewport->pos.value[ 0 ] = request->viewport().x();
                 viewport->y = request->viewport().y();
 
                 if ( request->viewport().has_viewsize() ) {

@@ -1,0 +1,33 @@
+= Introduction =
+
+Economy emulation is a huge stuff to deal. In game we want to make 
+  * supply and demand
+  * technologies of industries
+  * age of products
+  * a lot of cargos (with subtypes: new milk, pasteurized milk, so on
+
+= Details =
+== Industry ==
+http://yuml.me/4187187a?.png
+{{{
+#
+#Simplified
+[Material|+string name]
+[Material]^[RawMaterial]
+[Material]^[PreFabricated]
+[Material]^[Product]
+[Material]+-1>[MaterialType|+string units]
+[MaterialType]-[note: Liquid bulk crates etc]
+[TechnologyFraction|+uint amount|+uint quality]+-1>[Material],[TechnologyFraction]-[note: amount and quality are per each Technology]
+[TechnologyFraction]-[note: quality - is contribution to final product of this fraction in procents]
+[TechnologyOutput|+uint amount;+uint quality]+-1>[Material]
+[TechnologyOutput]-[note: quality - is quality of product itself]
+[Technology|list of TechnologyFraction inputs;list of TechnologyOutput output]-[note: each technology process will takes some material (fraction) as input and gives some material as output]
+[Technology]+-*>[TechnologyFraction]
+[Technology]+-*>[TechnologyOutput]
+[Technology]-[note: Should be loaded from scripts definitions]
+[Store]-[note: Is very useful object in game]
+[Store|map of Material and amount]
+[Industry|OnTick(); OnDay(); OnMonth()]+-1..2>[Technology]
+[Industry]+-1>[Store]
+}}}

@@ -31,3 +31,19 @@ http://yuml.me/4187187a?.png
 [Industry|OnTick(); OnDay(); OnMonth()]+-1..2>[Technology]
 [Industry]+-1>[Store]
 }}}
+
+http://yuml.me/7dfe1489?.png
+{{{
+#Simplified
+[Industry|Money RawPrice;Money ManufacturingPrice;Money SellPrice]
+[Industry]+-1>[Store|list of CargoUnits Products]
+[Store]+-0..*>[MaterialSupply|CargoUnits DemandLastMonth;CargoUnits DemandThisMonth;Money deliveryCost;OnRouteChange()]
+[Store]+-0..*>[MaterialProvider]
+[Industry]-[note: Support multiply routes for one material. Handle buy prices with care and math]
+[Route]+-0..*>[Route|LengthUnits length]
+[Route]^[MaterialSupply]
+[Route]^[MaterialProvider]
+[MaterialSupply]+-1>[Material]
+[MaterialSupply]-[note: price of delivery should be estimated by median and then obtained from factual]
+[MaterialProvider]+-1>[Material]
+}}}

@@ -28,7 +28,9 @@ http://yuml.me/4187187a?.png
 [Technology]-[note: Should be loaded from scripts definitions]
 [Store]-[note: Is very useful object in game]
 [Store|map of Material and amount]
-[Industry|OnTick(); OnDay(); OnMonth()]+-1..2>[Technology]
+[Industry|bitmask ProductionLines;OnTick(); OnDay(); OnMonth()]+-1>[IndustryType]
+[IndustryType|bitmask LayoutType]+-1..2>[Technology]
+[IndustryType]-[note: Can aggregate 1 or 2 technologies. E.g. chairs and beds. But final industry has bitmask of implemented technologies]
 [Industry]+-1>[Store]
 }}}
 

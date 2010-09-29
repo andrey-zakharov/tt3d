@@ -1,0 +1,24 @@
+#summary About routing, path finding. Simplified
+
+= Introduction =
+
+Routes - .
+Branches - 
+
+
+= Details =
+http://yuml.me/2a57baab?.png
+{{{
+# Cool Class Diagram
+[Branch|Length len;Bitmask type|OnTrackChanged()]+1..*-*>[Track],[Track]-[note: Track is a small part of road]
+[Branch]-[note: Branch is a complete set of tracks between 2 nodes]
+[Branch]+-2>[Node|MapPosition pos]
+[Track]^[Junction]
+[Node]^[Junction]
+[Node]^[Station|Bitmask type],[Station]+-1..*>[Track]
+[Station]-[note: Inside every industry or house - station of pedestrian type]
+[Route|Length len;Bitmask type|OnBrancheChanged()]+-1..*>[Branch]
+[Route]+-2>[Station]
+[Route]-[note: Route is complete set of branches between 2 stations]
+[Route]-[note: Route is about cargo routing. Branch is about vehicle path finding]
+}}}

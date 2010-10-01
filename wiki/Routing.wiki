@@ -7,7 +7,7 @@ Branches -
 
 
 = Details =
-http://yuml.me/2a57baab?.png
+http://yuml.me/1a6a702b?.png
 {{{
 # Cool Class Diagram
 [Branch|Length len;Bitmask type|OnTrackChanged()]+1..*-*>[Track],[Track]-[note: Track is a small part of road]

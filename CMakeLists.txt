@@ -22,7 +22,7 @@ set ( TARGET_COMMON "${PROJECT_NAME}-common" )
 #-------------------------------------------------------------
 #set( Boost_DEBUG ON )
 #set ( Boost_DIR "~/src/boost_1_42_0" )
-set ( BOOST_ROOT "~/src/boost_1_42_0" )
+set ( BOOST_ROOT "~/src/boost_1_44_0" )
 set ( Boost_ADDITIONAL_VERSIONS "1.40" "1.41" "1.42" "1.42.0" "1.43" "1.44" )
 set ( BOOST_LIBRARYDIR ${BOOST_ROOT}/stage/lib )
 set ( Boost_USE_STATIC_LIBS OFF )
@@ -61,7 +61,9 @@ set ( INCLUDE_DIRS
   ${CMAKE_SOURCE_DIR}/src
   ${CMAKE_SOURCE_DIR}/inc
   ${CMAKE_SOURCE_DIR}/src/core
+  ${CMAKE_SOURCE_DIR}/src/core/model
   ${CMAKE_SOURCE_DIR}/src/server
+    ${CMAKE_SOURCE_DIR}/src/server/economy
 
   # for proto/meta.pb.h
   ${CMAKE_CURRENT_BINARY_DIR}
@@ -127,11 +129,12 @@ target_link_libraries ( ${TARGET_COMMON} ${COMMON_LIBS} )
 # -------------------------------------------------------------
 message( STATUS "Configured in ${CMAKE_BUILD_TYPE}" )
 set ( TESTS_SOURCES
-    src/test/TestClients.cpp
+  src/test/TestClients.cpp
   src/test/TestMain.cpp
   src/test/TestThreadPool.cpp
   src/test/TestIOServicePool.cpp
   src/test/TestTimerMaster.cpp
+  src/test/TestRoute.cpp
   src/test/ListenTest.cpp
 )
 set ( TEST test_${CMAKE_PROJECT_NAME} )

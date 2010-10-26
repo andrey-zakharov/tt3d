@@ -9,6 +9,8 @@
 #define	COMMON_HPP
 #include <string>
 #include <vector>
+#include <boost/foreach.hpp>
+#define foreach    BOOST_FOREACH
 
 using std::string;
 using std::vector;

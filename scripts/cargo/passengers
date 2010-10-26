@@ -1,0 +1,5 @@
+cargo = {
+    id = 1,
+    name = "Passengers"
+};
+

@@ -10,9 +10,7 @@
 
 #include <cmath>
 #include <vector>
-#include <boost/lambda/loops.hpp>
-using namespace boost::lambda; // bad
-
+#include "Common.hpp"
 //http://www.possibility.com/Cpp/CppCodingStandard.html
 namespace core {
 
@@ -59,7 +57,7 @@ namespace core {
 
         //common
         inline
-        const       TMeasure    Get( Axis axis ) throw() { return value.at( axis ); }
+        const       TMeasure    Get( Axis axis ) const throw() { return value.at( axis ); }
 
         Coordinate< TDimens - 1, TMeasure > NormalProjection() {
             std::vector< TMeasure > _v = value;
@@ -78,13 +76,10 @@ namespace core {
 
             double ret = 0.0;
             int i = AXISX;
-            /*DimIter from = value.begin();
 
-            std::for_each( from,
-                (std::vector< TMeasure >::iterator)value.end(),
-                ret += pow( double( std::abs( _1 - _b.Get( (Axis)(i++) ) ) ), 2.0 )
-            );*/
-
+            foreach( TMeasure m, value ) {
+                ret += pow( double( std::abs( m - _b.Get( (Axis)(i++) ) ) ), 2.0 );
+            }
 
             ret = pow( ret, 0.5 );
 
@@ -145,6 +140,9 @@ namespace core {
         ThreeDCoordinate() : Coordinate< 3, TMeasure >() {} ;
         ThreeDCoordinate( TMeasure x, TMeasure y, TMeasure z ) : Coordinate< 3, TMeasure >( x, y, z ) {} ;
     };
+
+    typedef     int     lenType;
+    typedef     ThreeDCoordinate< lenType >    MapCoordinate;
 
 }
 

@@ -1,0 +1,1 @@
+Trying to build well-made application code structure

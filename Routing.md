@@ -1,0 +1,18 @@
+# Introduction #
+
+Routes - .
+Branches -
+
+
+# Model #
+![http://yuml.me/7bd3ac1e?.png](http://yuml.me/7bd3ac1e?.png)[Branch|Length len;Bitmask type|OnTrackChanged()]+1..*-*>[Track],[Track]-[note: Track is a small part of road{bg:yellow}]
+[Branch]-[note: Branch is a complete set of tracks between 2 nodes{bg:yellow}]
+[Branch]+-2>[Node|MapPosition pos]
+[Track]^[Junction]
+[Node]^[Junction]
+[Node]^[Station|Bitmask type],[Station]+-1..*>[Track]
+[Station]-[note: Inside every industry or house - station of pedestrian type{bg:yellow}]
+[Route|Length len;Bitmask type|OnBrancheChanged()]+-1..*>[Branch]
+[Route]+-2>[Station]
+[Route]-[note: Route is complete set of branches between 2 stations{bg:yellow}]
+[Route]-[note: Route is about cargo routing. Branch is about vehicle path finding{bg:yellow}]}}}```
